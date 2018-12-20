@@ -33,6 +33,7 @@ io.on('connection', function(socket) {
       if (players[i].id === coordsObject.id) {
         players[i].x = coordsObject.x;
         players[i].y = coordsObject.y;
+        players[i].bullets = coordsObject.bullets;
         matches++;
       } 
     }
