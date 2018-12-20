@@ -1,6 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=VT323');
+
+* {
+  font-family: 'VT323', monospace;
+}
+
 body {
   background: #232526; 
   margin: 0;
+  font-family: 'VT323', monospace;
 }
 
 main {
@@ -67,6 +74,7 @@ radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px; */
 #send {
   width: 60px;
   height: 30px;
+  font-family: 'VT323', monospace;
 }
 
 #gameContainer {

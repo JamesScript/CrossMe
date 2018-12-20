@@ -1,4 +1,5 @@
 let player;
+let opponents = [];
 
 function setup() {
   const gameContainer = $("#gameContainer")[0];
@@ -10,9 +11,21 @@ function setup() {
 }
 
 function draw() {
+  let infoPackage = {
+    x: player.x,
+    y: player.y,
+    id: id
+  };
   background(0);
   player.show();
   player.update();
+  for (let i = 0; i < opponents.length; i++) {
+    if (opponents[i].id !== id) {
+      fill(255);
+      rect(opponents[i].x, opponents[i].y, player.w, player.h);
+    }
+  }
+  socket.emit('player coordinates', JSON.stringify(infoPackage));
 }
 
 class Player {

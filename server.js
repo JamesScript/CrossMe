@@ -4,6 +4,8 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const shortid = require('shortid');
 
+let players = [];
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -23,7 +25,26 @@ io.on('connection', function(socket) {
     io.emit('chat message', msg);
   });
   
+  socket.on('player coordinates', function(coords) {
+    // io.emit('player coordinates', coords);
+    let coordsObject = JSON.parse(coords);
+    let matches = 0;
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].id === coordsObject.id) {
+        players[i].x = coordsObject.x;
+        players[i].y = coordsObject.y;
+        matches++;
+      } 
+    }
+    if (matches === 0 && coordsObject.id.length > 0) {
+      players.push(coordsObject);
+    }
+    let outData = {data: players};
+    io.emit('player coordinates', JSON.stringify(outData));
+  });
+  
   socket.on('disconnect', function() {
+    players = [];
     console.log('a user disconnected');
   });
 });
