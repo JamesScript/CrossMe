@@ -1,0 +1,16 @@
+body {
+  background: #232526; 
+  background: -webkit-linear-gradient(to right, #414345, #232526);  
+  background: linear-gradient(to right, #414345, #232526);
+  margin: 0;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+}
+
+#gameContainer {
+  background: #666666;
+  height: 100vh;
+}
