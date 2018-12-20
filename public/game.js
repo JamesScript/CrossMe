@@ -35,6 +35,11 @@ function draw() {
         let bulletX = opponents[i].bullets[j][0] * width;
         let bulletY = opponents[i].bullets[j][1] * height;
         ellipse(bulletX, bulletY, width * 0.01);
+        let playerMidX = player.x + player.w / 2;
+        let playerMidY = player.y + player.h / 2;
+        if (dist(bulletX, bulletY, playerMidX, playerMidY) < player.w) {
+          socket.emit('chat message', name + ": OUCH!");
+        }
       }
     }
   }

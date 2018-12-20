@@ -27,9 +27,12 @@ ul {
   max-width: 100%;
   background: black;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
+  font-size: 40px;
+}
+
+#submitName * {
+  font-size: 40px;
 }
 
 #msgContainer {
@@ -49,6 +52,7 @@ ul {
 
 #chatWindow {
   border: #878787 inset 10px;
+  font-size: 20px;
 }
 
 #chatForm {
@@ -75,6 +79,7 @@ radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px; */
   width: 60px;
   height: 30px;
   font-family: 'VT323', monospace;
+  font-size: 20px;
 }
 
 #gameContainer {
