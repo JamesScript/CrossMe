@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Basic Chatroom</title>
+    <meta name="description" content="A cool thing made with Glitch">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    <script defer src="/socket.io.js"></script>
+    <script defer src="/p5.js"></script>
+    <script defer src="/jquery-3.3.1.min.js"></script>
+    <script defer src="/client.js"></script>
+    <script defer src="/game.js"></script>
+  </head>
+  <body>
+    <div id="enterName">
+      <h2>
+        Please enter your name or alias: 
+      </h2>
+      <form id="submitName">
+        <input id="userNameIn" required/>
+        <button>
+          ENTER
+        </button>
+      </form>
+    </div>
+    <main>
+      <div id="gameContainer">
+        
+      </div>
+      <div id="chatWindow">
+        <div id="msgContainer" class="wordwrap">
+          <ul id="messages"></ul>
+        </div>
+        <form id="chatForm" action="">
+          <input id="m" autocomplete="off" />
+          <button id="send">Send</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
