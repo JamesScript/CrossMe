@@ -32,6 +32,10 @@ function draw() {
     if (opponents[i].id !== id) {
       fill(opponents[i].hue, 100, 100);
       rect(opponents[i].x * width, opponents[i].y * height, player.w, player.h);
+      fill(0);
+      const eyeSize = width * 0.007;
+      ellipse(this.x + this.w * (opponents[i].dir === 1 ? 0.75 : 0.25), this.y + this.h * (opponents[i].dir === 2 ? 0.75 : 0.25), eyeSize);
+      ellipse(this.x + this.w * (opponents[i].dir === 3 ? 0.25 : 0.75), this.y + this.h * (opponents[i].dir === 0 ? 0.25 : 0.75), eyeSize);
       for (let j = 0; j < opponents[i].bullets.length; j++) {
         fill(0, 100, 100);
         let bulletX = opponents[i].bullets[j][0] * width;
