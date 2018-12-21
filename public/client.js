@@ -31,17 +31,9 @@ $(function () {
         let opponentId = parsedInfo.id;
         let bulletIndex = parsedInfo.bulletIndex;
 
-
-        // if (player.id === opponentId) {
-        //   console.log("delete all bullets of player");
-        //   player.bullets = [];
-        //   // player.bullets.splice(bulletIndex, 1);
-        // }
         for (let i = 0; i < opponents.length; i++) {
             if (opponents[i].id === opponentId) {
-                // opponents[i].bullets = [];
                 player.bullets.splice(bulletIndex, 1);
-                // opponents[i].bullets.splice(bulletIndex, 1);
                 break;
             }
         }
