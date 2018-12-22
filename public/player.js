@@ -9,6 +9,8 @@ class Player {
         this.dir = 0; // 0 UP 1 RIGHT 2 DOWN 3 LEFT
         this.canShoot = true;
         this.invincible = false;
+        this.prevX = [];
+        this.prevY = [];
     }
 
     show() {
@@ -17,6 +19,14 @@ class Player {
             this.bullets[i].update();
             if (this.bullets[i].offScreen()) {
                 this.bullets.splice(i, 1);
+            } else {
+                for (let j = 0; j < walls.length; j++) {
+                    if (collides(this.bullets[i], walls[j])) {
+                        this.bullets.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                }
             }
         }
         if (!this.invincible || (this.invincible && frameCount % 2 === 0)) {
@@ -57,6 +67,15 @@ class Player {
         }
         this.x = constrain(this.x, 0, width - this.w);
         this.y = constrain(this.y, 0, height - this.h);
+        this.prevX.unshift(this.x);
+        this.prevY.unshift(this.y);
+        if (this.prevX.length > 10) {
+            this.prevX.pop();
+        }
+        if (this.prevY.length > 10) {
+            this.prevY.pop();
+        }
+
     }
 
     temporaryInvincibility(time) {

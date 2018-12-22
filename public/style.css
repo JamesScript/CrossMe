@@ -1,96 +1,103 @@
 @import url('https://fonts.googleapis.com/css?family=VT323');
 
 * {
-  font-family: 'VT323', monospace;
+    font-family: 'VT323', monospace;
 }
 
 body {
-  background: #232526; 
-  margin: 0;
-  font-family: 'VT323', monospace;
+    background: #232526;
+    margin: 0;
+    font-family: 'VT323', monospace;
 }
 
 main {
-  display: grid;
-  grid-template-columns: 1fr 300px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
 }
 
 ul {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 button {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #enterName {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  max-width: 100%;
-  background: black;
-  color: white;
-  text-align: center;
-  font-size: 40px;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background: black;
+    color: white;
+    text-align: center;
+    font-size: 40px;
 }
 
 #submitName * {
-  font-size: 40px;
+    font-size: 40px;
 }
 
 #msgContainer {
-  height: calc(90vh - 20px);
-  overflow-y: scroll;
-  background: #AAAAAA;
-  padding: 10px;
+    height: calc(90vh - 170px);
+    overflow-y: scroll;
+    background: #AAAAAA;
+    padding: 0;
+    margin: 0;
 }
 
-.wordwrap { 
-   white-space: pre-wrap;      /* CSS3 */   
-   white-space: -moz-pre-wrap; /* Firefox */    
-   white-space: -pre-wrap;     /* Opera <7 */   
-   white-space: -o-pre-wrap;   /* Opera 7 */    
-   word-wrap: break-word;      /* IE */
+.wordwrap {
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -pre-wrap; /* Opera <7 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* IE */
+}
+
+#stats {
+    height: 130px;
+    border: #878787 inset 10px;
 }
 
 #chatWindow {
-  border: #878787 inset 10px;
-  font-size: 20px;
+    border: #878787 inset 10px;
+    font-size: 20px;
 }
 
 #chatForm {
-/*   background:
-radial-gradient(black 15%, transparent 16%) 0 0,
-radial-gradient(black 15%, transparent 16%) 8px 8px,
-radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
-radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px; */
-  background-color:#282828;
-/*   background-size:20px 20px; */
-  display: flex;
-  justify-content: center;
-  height: calc(10vh - 20px);
-  align-items: center;
+    /*   background:
+    radial-gradient(black 15%, transparent 16%) 0 0,
+    radial-gradient(black 15%, transparent 16%) 8px 8px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px; */
+    background-color: #282828;
+    /*   background-size:20px 20px; */
+    display: flex;
+    justify-content: center;
+    height: calc(10vh);
+    align-items: center;
 }
 
 #m {
-  width: 220px;
-  height: 24px;
-  font-size: 18px;
+    width: 220px;
+    height: 24px;
+    font-size: 18px;
 }
 
 #send {
-  width: 60px;
-  height: 30px;
-  font-family: 'VT323', monospace;
-  font-size: 20px;
+    width: 60px;
+    height: 30px;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
 }
 
 #gameContainer {
-  background-color:#111111;
-  height: calc(100vh - 20px);
-  border: #888888 inset 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-color: #111111;
+    height: calc(100vh - 20px);
+    border: #888888 inset 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

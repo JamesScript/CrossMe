@@ -16,6 +16,7 @@
     <script defer src="/player.js"></script>
     <script defer src="/bullet.js"></script>
     <script defer src="/wall.js"></script>
+    <script defer src="/cornersLevel.js"></script>
     <script defer src="/client.js"></script>
     <script defer src="/game.js"></script>
   </head>
@@ -35,14 +36,19 @@
       <div id="gameContainer">
         
       </div>
-      <div id="chatWindow">
-        <div id="msgContainer" class="wordwrap">
-          <ul id="messages"></ul>
+      <div id="rightSide">
+        <div id="stats">
+          <!--<p>HP: </p>-->
         </div>
-        <form id="chatForm" action="">
-          <input id="m" autocomplete="off" required/>
-          <button id="send">Send</button>
-        </form>
+        <div id="chatWindow">
+          <div id="msgContainer" class="wordwrap">
+            <ul id="messages"></ul>
+          </div>
+          <form id="chatForm" action="">
+            <input id="m" autocomplete="off" required/>
+            <button id="send">Send</button>
+          </form>
+        </div>
       </div>
     </main>
   </body>
