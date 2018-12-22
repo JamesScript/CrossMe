@@ -1,21 +1,28 @@
 let player;
 let opponents = [];
+let walls = [];
 
 function setup() {
     const gameContainer = $("#gameContainer")[0];
     const smallerDim = gameContainer.clientWidth < gameContainer.clientHeight ? gameContainer.clientWidth : gameContainer.clientHeight;
     const cnv = createCanvas(smallerDim, smallerDim);
     cnv.parent("gameContainer");
-    player = new Player(100, 100);
+    player = new Player(0, 0);
     colorMode(HSB);
     noStroke();
+    cornersLevel();
 }
 
 function draw() {
     // Send the coordinates of player as proportion of width and height, as different players will have different sizes
     background(0);
+    // All bullets handled in player.show()
     player.show();
     player.update();
+    for (let i = 0; i < walls.length; i++) {
+        walls[i].show();
+        walls[i].update();
+    }
     let infoPackage = {
         x: player.x / width,
         y: player.y / height,
