@@ -34,6 +34,7 @@ button {
     color: white;
     text-align: center;
     font-size: 40px;
+    z-index: 10;
 }
 
 #submitName * {
@@ -59,6 +60,31 @@ button {
 #stats {
     height: 130px;
     border: #878787 inset 10px;
+    color: white;
+}
+
+.hpContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+#hpBarBlack {
+    background: black;
+    width: 200px;
+    height: 50px;
+}
+
+#hpBarRed {
+    background: red;
+    height: inherit;
+    width: 100%;
+}
+
+#hpNumbers {
+    position: absolute;
+    width: inherit;
+    text-align: center;
+    color: white;
 }
 
 #chatWindow {

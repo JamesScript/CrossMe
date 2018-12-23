@@ -17,6 +17,7 @@
     <script defer src="/bullet.js"></script>
     <script defer src="/wall.js"></script>
     <script defer src="/cornersLevel.js"></script>
+    <script defer src="/powerUps.js"></script>
     <script defer src="/client.js"></script>
     <script defer src="/game.js"></script>
   </head>
@@ -38,7 +39,13 @@
       </div>
       <div id="rightSide">
         <div id="stats">
-          <!--<p>HP: </p>-->
+          <div class="hpContainer">
+            <p>HP: </p>
+            <div id="hpBarBlack">
+              <p id="hpNumbers">100 / 100</p>
+              <div id="hpBarRed"></div>
+            </div>
+          </div>
         </div>
         <div id="chatWindow">
           <div id="msgContainer" class="wordwrap">
