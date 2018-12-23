@@ -1,6 +1,7 @@
 let player;
 let opponents = [];
 let walls = [];
+let powerUp;
 
 function setup() {
     const gameContainer = $("#gameContainer")[0];
@@ -11,6 +12,7 @@ function setup() {
     colorMode(HSB);
     noStroke();
     cornersLevel();
+    spawnPowerUp();
 }
 
 function draw() {
@@ -19,6 +21,8 @@ function draw() {
     // All bullets handled in player.show()
     player.show();
     player.update();
+    powerUp.show();
+    powerUp.update();
     for (let i = 0; i < walls.length; i++) {
         walls[i].show();
         walls[i].update();
@@ -53,10 +57,15 @@ function draw() {
                 let playerMidX = player.x + player.w / 2;
                 let playerMidY = player.y + player.h / 2;
                 let currentBullet = {x: bulletX, y: bulletY, w: width * 0.01, h: height * 0.01};
-                if (collides(currentBullet, player) && !player.invincible) {
-                    socket.emit('chat message', name + ": OUCH!");
+                if (collides(currentBullet, player)) {
+                    // socket.emit('chat message', name + ": OUCH!");
+                    if (!player.invincible && !player.shielded) {
+                        player.hp -= 10;
+                        $("#hpNumbers").text(`${player.hp} / 100`);
+                        $("#hpBarRed").css({width: `${player.hp}%`});
+                        player.temporaryInvincibility(300);
+                    }
                     socket.emit('splice bullet', JSON.stringify({id: opponents[i].id, bulletIndex: j}));
-                    player.temporaryInvincibility(300);
                 }
             }
         }

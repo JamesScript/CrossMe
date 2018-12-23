@@ -11,6 +11,11 @@ class Player {
         this.invincible = false;
         this.prevX = [];
         this.prevY = [];
+        this.hp = 100;
+        this.speedBonus = 1;
+        this.fireRate = 200;
+        this.shielded = false;
+        this.tripping = false;
     }
 
     show() {
@@ -30,6 +35,11 @@ class Player {
             }
         }
         if (!this.invincible || (this.invincible && frameCount % 2 === 0)) {
+            if (this.shielded) {
+                let sGap = width * 0.01 + sin(frameCount / 5) * (width * 0.01);
+                fill(200, 100, 100);
+                rect(this.x - sGap, this.y - sGap, this.w + sGap*2, this.h + sGap*2);
+            }
             fill(this.hue, 100, 100);
             rect(this.x, this.y, this.w, this.h);
             fill(0);
@@ -40,7 +50,7 @@ class Player {
     }
 
     update() {
-        const speed = width * 0.01;
+        let speed = width * 0.01 * this.speedBonus;
         if (keyIsDown(37)) {
             this.x -= speed;
             this.dir = 3;
@@ -63,7 +73,7 @@ class Player {
             this.canShoot = false;
             setTimeout(function () {
                 self.canShoot = true;
-            }, 200);
+            }, self.fireRate);
         }
         this.x = constrain(this.x, 0, width - this.w);
         this.y = constrain(this.y, 0, height - this.h);
@@ -75,7 +85,12 @@ class Player {
         if (this.prevY.length > 10) {
             this.prevY.pop();
         }
-
+        if (this.health > 100) {
+            this.health = 100;
+        }
+        if (this.health < 0) {
+            this.health = 0;
+        }
     }
 
     temporaryInvincibility(time) {
