@@ -7,7 +7,8 @@ class Wall {
     }
 
     show() {
-        fill(195, 25, 90);
+        let hue = player.tripping ? (frameCount * 10) % 360 : 195;
+        fill(hue, 25, 90);
         rect(this.x, this.y, this.w, this.h);
     }
 

@@ -2,8 +2,8 @@ class Bullet {
     constructor(x, y, dir) {
         this.x = x;
         this.y = y;
-        this.w = width * 0.01;
-        this.h = height * 0.01;
+        this.w = width * 0.007;
+        this.h = height * 0.007;
         this.dir = dir;
     }
 
@@ -13,7 +13,7 @@ class Bullet {
     }
 
     update() {
-        const speed = width * 0.015;
+        const speed = width * 0.03;
         let xVels = [0, speed, 0, -speed];
         let yVels = [-speed, 0, speed, 0];
         this.x += xVels[this.dir];

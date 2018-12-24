@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <title>CROSS ME</title>
     <meta name="description" content="A cool thing made with Glitch">
     <link id="favicon" rel="icon" href="/icon.jpg" type="image/x-icon">
@@ -18,45 +18,55 @@
     <script defer src="/wall.js"></script>
     <script defer src="/cornersLevel.js"></script>
     <script defer src="/powerUps.js"></script>
+    <script defer src="/opponents.js"></script>
     <script defer src="/client.js"></script>
     <script defer src="/game.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="enterName">
-      <h2>
-        Please enter your name or alias: 
-      </h2>
-      <form id="submitName">
-        <input id="userNameIn" required/>
-        <button>
-          ENTER
-        </button>
-      </form>
+        <div>
+            <h2>
+                Please enter your name or alias:
+            </h2>
+            <form id="submitName">
+                <input id="userNameIn" required/>
+                <button>
+                    ENTER
+                </button>
+            </form>
+        </div>
+    </div>
+    <div id="deathScreen">
+        <h1 id="youDied">YOU DIED!</h1>
+        <div class="respawnMessage">
+            <p>YOU WILL RESPAWN IN:&nbsp;</p>
+            <p id="respawnCounter"></p>
+        </div>
     </div>
     <main>
-      <div id="gameContainer">
-        
-      </div>
-      <div id="rightSide">
-        <div id="stats">
-          <div class="hpContainer">
-            <p>HP: </p>
-            <div id="hpBarBlack">
-              <p id="hpNumbers">100 / 100</p>
-              <div id="hpBarRed"></div>
+        <div id="gameContainer">
+
+        </div>
+        <div id="rightSide">
+            <div id="stats">
+                <div class="hpContainer">
+                    <p>HP: </p>
+                    <div id="hpBarBlack">
+                        <p id="hpNumbers">100 / 100</p>
+                        <div id="hpBarRed"></div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div id="chatWindow">
+                <div id="msgContainer" class="wordwrap">
+                    <ul id="messages"></ul>
+                </div>
+                <form id="chatForm" action="">
+                    <input id="m" autocomplete="off" required/>
+                    <button id="send">Send</button>
+                </form>
+            </div>
         </div>
-        <div id="chatWindow">
-          <div id="msgContainer" class="wordwrap">
-            <ul id="messages"></ul>
-          </div>
-          <form id="chatForm" action="">
-            <input id="m" autocomplete="off" required/>
-            <button id="send">Send</button>
-          </form>
-        </div>
-      </div>
     </main>
-  </body>
+</body>
 </html>

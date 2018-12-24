@@ -32,9 +32,41 @@ button {
     max-width: 100%;
     background: black;
     color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: 40px;
     z-index: 10;
+}
+
+#deathScreen {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background: black;
+    color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 11;
+    font-size: 8vh;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.appear {
+    animation: appear 600ms linear 0s forwards;
+}
+
+#youDied {
+    transform: rotate(-15deg);
+}
+
+.respawnMessage {
+    display: flex;
 }
 
 #submitName * {
@@ -47,6 +79,10 @@ button {
     background: #AAAAAA;
     padding: 0;
     margin: 0;
+}
+
+.gameMsg {
+    color: red;
 }
 
 .wordwrap {
@@ -126,4 +162,14 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    filter: blur(0px);
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

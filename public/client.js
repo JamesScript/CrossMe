@@ -11,6 +11,7 @@ $(function () {
         name = $("#userNameIn").val();
         $('#enterName').hide();
         e.preventDefault();
+        inGame = true;
     });
 
     $('#chatForm').submit(function () {
@@ -26,6 +27,12 @@ $(function () {
         container.scrollTop(container[0].scrollHeight);
     });
 
+    socket.on('game message', function(msg) {
+        $('#messages').append($('<li class="gameMsg">').text(msg));
+        const container = $('#msgContainer');
+        container.scrollTop(container[0].scrollHeight);
+    });
+
     socket.on('splice bullet', function (info) {
         let parsedInfo = JSON.parse(info);
         let opponentId = parsedInfo.id;
@@ -36,6 +43,24 @@ $(function () {
                 player.bullets.splice(bulletIndex, 1);
                 break;
             }
+        }
+    });
+
+    socket.on('spawn power up', function(info) {
+        let potentialPowerUp = JSON.parse(info);
+        // X and Y values multiplied by width and height in constructor of PowerUp
+        powerUp = new PowerUp(potentialPowerUp.x, potentialPowerUp.y, potentialPowerUp.type);
+    });
+
+    socket.on('power up got', function() {
+        powerUp.got = true;
+    });
+
+    socket.on('get power up details', function(details) {
+        let potentialPowerUp = JSON.parse(details);
+        powerUp = new PowerUp(potentialPowerUp.x, potentialPowerUp.y, potentialPowerUp.type);
+        if (potentialPowerUp.got) {
+            powerUp.got = true;
         }
     });
 
