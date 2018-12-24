@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
     socket.on('power up got', function () {
         powerUpFailSafe = setTimeout(function() {
             const powerUpTypes = ["health", "speed", "rapidFire", "shield", "slothadone", "funkyFungus"];
-            let rnd = floor(random(powerUpTypes.length));
+            let rnd = Math.floor(Math.random() * powerUpTypes.length);
             powerUpGot = false;
             const defaultPowerUp = {
                 x: 0.5,

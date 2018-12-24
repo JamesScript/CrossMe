@@ -20,7 +20,7 @@ class PowerUp {
             const limit = 20;
             let frameFr = frameCount % limit;
             stroke(0, 0, 100, (limit - frameFr) / limit);
-            rect(0, 0, frameFr * rad, frameFr * rad);
+            rect(0, 0, frameFr * rad + player.w / 2, frameFr * rad + player.h / 2);
             pop();
             fill(50, 100, 100);
             rect(this.x, this.y, this.w, this.h);
