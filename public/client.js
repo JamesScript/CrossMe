@@ -9,9 +9,12 @@ $(function () {
 
     $('#submitName').submit(function (e) {
         name = $("#userNameIn").val();
-        $('#enterName').hide();
+        $('#enterName')
+            .css({"pointer events": "none"})
+            .addClass("vanish");
         e.preventDefault();
         inGame = true;
+
     });
 
     $('#chatForm').submit(function () {
