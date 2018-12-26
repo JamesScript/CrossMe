@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 const shortid = require('shortid');
 
 let players = [];
+let rooms = [];
 
 let lastPowerUpX = 0.5;
 let lastPowerUpY = 0.5;
@@ -24,6 +25,11 @@ app.get('/getID', function (req, res) {
 
 io.on('connection', function (socket) {
     console.log('a user connected');
+
+    socket.on('update rooms', function () {
+        let output = {data: rooms};
+        io.emit('update rooms', JSON.stringify(output));
+    });
 
     socket.on('chat message', function (msg) {
         io.emit('chat message', msg);

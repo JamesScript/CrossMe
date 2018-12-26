@@ -24,6 +24,10 @@ $(function () {
         return false;
     });
 
+    socket.on('update rooms', function (incoming) {
+        let parsed = JSON.parse(incoming);
+    });
+
     socket.on('chat message', function (msg) {
         $('#messages').append($('<li>').text(msg));
         const container = $('#msgContainer');
