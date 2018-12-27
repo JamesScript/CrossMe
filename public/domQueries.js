@@ -1,4 +1,5 @@
 function domQueries() {
+
     // Submit name - Action taken when submitName button is pressed
     $('#submitName').submit(function (e) {
         name = $("#userNameIn").val();
@@ -17,14 +18,50 @@ function domQueries() {
         return false;
     });
 
+    // Hide password screen function
+    const hidePWScreen = function() {
+        desiredRoom = null;
+        $("#roomPassword").val('');
+        $("#passwordPrompt").css({"pointer-events": "none", "opacity": "0"});
+    };
+
     // Password submission form
     $('#passwordForm').submit(function(e) {
         e.preventDefault();
         let passwordInput = $("#roomPassword");
+        let feedback = $("#passwordFeedback");
         let passwordToSubmit = passwordInput.val();
         $.get("/passwordSubmission/" + passwordToSubmit + "&" + desiredRoom, function(data) {
-            desiredRoom = null;
+            console.log(data);
+            switch (data) {
+                case "missing":
+                    feedback.text("Something went wrong, could not find room");
+                    break;
+                case "denied":
+                    feedback.text("Wrong password");
+                    break;
+                case "granted":
+                    room = desiredRoom;
+                    inGame = true;
+                    $("#lobby").hide();
+                    hidePWScreen();
+                    break;
+                default:
+                    feedback.text("Something went wrong, could not find room");
+                    break;
+            }
         });
         passwordInput.val('');
+    });
+
+    // Creating a new room
+    $('#roomCreationForm').submit(function(e) {
+        e.preventDefault();
+
+    });
+
+    // Button to back out of password prompt screen
+    $('#backBtn').click(function() {
+        hidePWScreen();
     });
 }

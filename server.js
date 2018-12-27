@@ -52,8 +52,23 @@ app.get('/checkIfPublic/:num', function(req, res) {
 });
 
 app.get('/passwordSubmission/:password&:desiredRoomNum', function(req, res) {
-    console.log(req.params.password);
-    console.log(req.params.desiredRoomNum);
+    // console.log(req.params.password);
+    // console.log(req.params.desiredRoomNum);
+    let output = "missing";
+    for (let i = 0; i < rooms.length; i++) {
+        if (rooms[i].numId === Number(req.params.desiredRoomNum)) {
+            // Correct password
+            if (rooms[i].password === req.params.password) {
+                output = "granted";
+            }
+            // Incorrect password
+            else {
+                output = "denied";
+            }
+            break;
+        }
+    }
+    res.send(output);
 });
 
 // Manage socket connections

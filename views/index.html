@@ -19,8 +19,8 @@
     <script defer src="/powerUps.js"></script>
     <script defer src="/opponents.js"></script>
     <script defer src="/rooms.js"></script>
-    <script defer src="/domQueries.js"></script>
     <script defer src="/client.js"></script>
+    <script defer src="/domQueries.js"></script>
     <script defer src="/game.js"></script>
 </head>
 <body>
@@ -49,10 +49,21 @@
     </div>
     <div id="passwordPrompt">
         <h1>Please Enter The Password</h1>
-        <form id="passwordForm" action="/roomPassword">
+        <form id="passwordForm">
             <label for="roomPassword">Password: </label>
             <input id="roomPassword" type="password">
             <button>ENTER</button>
+        </form>
+        <button id="backBtn">BACK</button>
+        <p id="passwordFeedback"></p>
+    </div>
+    <div id="createRoomScreen">
+        <h1>Creating A Room</h1>
+        <form id="roomCreationForm">
+            <label for="creatingRoomName">Name: </label>
+            <input type="text" id="creatingRoomName">
+            <label for="creatingRoomPassword">Password: </label>
+            <input type="text" id="creatingRoomPassword" placeholder="Leave blank for a Public Room">
         </form>
     </div>
     <div id="deathScreen">
@@ -75,6 +86,13 @@
                         <div id="hpBarRed"></div>
                     </div>
                 </div>
+                <div class="killsContainer">
+                    <p>Kills: </p>
+                    <ol id="killList">
+
+                    </ol>
+                </div>
+                <button id="leaveRoom">LEAVE ROOM</button>
             </div>
             <div id="chatWindow">
                 <div id="msgContainer" class="wordwrap">

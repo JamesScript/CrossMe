@@ -17,6 +17,7 @@ class Player {
         this.shielded = false;
         this.tripping = false;
         this.alive = true;
+        this.kills = 0;
         this.killedBy = "";
     }
 

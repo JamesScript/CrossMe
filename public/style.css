@@ -101,6 +101,33 @@ button {
     pointer-events: none;
 }
 
+#passwordPrompt button {
+    font-size: 20px;
+}
+
+#passwordFeedback {
+    color: red;
+}
+
+#roomPassword {
+    height: 30px;
+    font-size: 20px;
+}
+
+#createRoomScreen {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background: black;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    opacity: 0;
+    z-index: 12;
+    pointer-events: none;
+}
+
 #deathScreen {
     position: fixed;
     width: 100vw;
@@ -139,7 +166,7 @@ button {
 }
 
 #msgContainer {
-    height: calc(90vh - 170px);
+    height: calc(90vh - 270px);
     overflow-y: scroll;
     background: #AAAAAA;
     padding: 0;
@@ -159,9 +186,10 @@ button {
 }
 
 #stats {
-    height: 130px;
+    height: 230px;
     border: #878787 inset 10px;
     color: white;
+    text-align: center;
 }
 
 .hpContainer {
@@ -188,6 +216,10 @@ button {
     color: white;
 }
 
+#leaveRoom {
+    font-size: 20px;
+}
+
 #chatWindow {
     border: #878787 inset 10px;
     font-size: 20px;
@@ -203,7 +235,7 @@ button {
     /*   background-size:20px 20px; */
     display: flex;
     justify-content: center;
-    height: calc(10vh);
+    height: 10vh;
     align-items: center;
 }
 

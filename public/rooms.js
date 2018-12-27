@@ -31,11 +31,9 @@ function enterRoom(roomNum) {
         // Password exists
         else {
             desiredRoom = roomNum;
+            $("#passwordFeedback").text("");
             $("#passwordPrompt").css({"pointer-events": "auto", "opacity": "1"});
         }
     });
 }
 
-// function promptPassword(pw) {
-//
-// }

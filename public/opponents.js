@@ -1,11 +1,11 @@
 function renderOpponents() {
     for (let i = 0; i < opponents.length; i++) {
         // Only render opponent if they're not you (as you will be in the players array) and obviously only if they're alive
-        if (opponents[i].id !== id && opponents[i].alive) {
+        if (opponents[i].id !== id && opponents[i].alive && opponents[i].room === room) {
             // Show enemies
             // This if statement makes the character flash every other frame if they're temporarily invincible
             if (!opponents[i].invincible || (opponents[i].invincible && frameCount % 2 === 0)) {
-                // Visual effects if user is under influence of funky fungs
+                // Visual effects if user is under influence of funky fungus
                 if (player.tripping) {
                     trip(opponents[i].x * width, opponents[i].y * height);
                 }
