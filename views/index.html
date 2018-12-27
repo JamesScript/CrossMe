@@ -19,6 +19,7 @@
     <script defer src="/powerUps.js"></script>
     <script defer src="/opponents.js"></script>
     <script defer src="/rooms.js"></script>
+    <script defer src="/domQueries.js"></script>
     <script defer src="/client.js"></script>
     <script defer src="/game.js"></script>
 </head>
@@ -36,12 +37,23 @@
             </form>
         </div>
     </div>
-    <div id="menu">
+    <div id="lobby">
         <h1>Choose A Room or Host One Yourself</h1>
-        <div id="listOfRooms">
+        <div class="flexCenter">
+            <div id="listOfRooms">
 
+            </div>
         </div>
+        <br>
         <button id="createRoomBtn">Create Room</button>
+    </div>
+    <div id="passwordPrompt">
+        <h1>Please Enter The Password</h1>
+        <form id="passwordForm" action="/roomPassword">
+            <label for="roomPassword">Password: </label>
+            <input id="roomPassword" type="password">
+            <button>ENTER</button>
+        </form>
     </div>
     <div id="deathScreen">
         <h1 id="youDied">YOU DIED!</h1>

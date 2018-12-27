@@ -21,6 +21,7 @@ class Player {
     }
 
     show() {
+        // Show bullets first, as they will appear 'under' the character which looks better than the alternative
         for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].show();
             this.bullets[i].update();
@@ -28,6 +29,8 @@ class Player {
                 this.bullets.splice(i, 1);
             } else {
                 for (let j = 0; j < walls.length; j++) {
+                    // If bullet hits the wall it can disappear from the game without calling server-side function
+                    // Updates to user's bullets will be sent in the 'infoPackage' in draw()
                     if (collides(this.bullets[i], walls[j])) {
                         this.bullets.splice(i, 1);
                         i--;
@@ -36,20 +39,26 @@ class Player {
                 }
             }
         }
+        // Character will flash every other frame if temporarily invincible
         if (!this.invincible || (this.invincible && frameCount % 2 === 0)) {
+            // Funky fungus visual effects
             if (this.tripping) {
                 trip(this.x, this.y);
             }
+            // Shielded
             if (this.shielded) {
                 let sGap = width * 0.01 + sin(frameCount / 5) * (width * 0.01);
                 fill(200, 100, 100);
                 rect(this.x - sGap, this.y - sGap, this.w + sGap*2, this.h + sGap*2);
             }
+            // Body
             fill(this.hue, 70, 100);
             rect(this.x, this.y, this.w, this.h);
+            // Eyes
             fill(0);
             const eyeSize = width * 0.007;
             if (player.tripping) {
+                // Eye colours go crazy during funky fungus effects
                 const count = 100;
                 let tripHue = map(frameCount % count, 0, count, 0, 360);
                 fill(tripHue, 100, 100);
@@ -60,17 +69,22 @@ class Player {
     }
 
     update() {
+        // Keyboard controls
         this.keyboardControls();
+        // Constrain character to canvas, can't go outside
         this.x = constrain(this.x, 0, width - this.w);
         this.y = constrain(this.y, 0, height - this.h);
+        // Keep log of previous positions in arrays
         this.prevX.unshift(this.x);
         this.prevY.unshift(this.y);
+        // Keep those arrays no longer than 10 elements
         if (this.prevX.length > 10) {
             this.prevX.pop();
         }
         if (this.prevY.length > 10) {
             this.prevY.pop();
         }
+        // If healed beyond maximum health, set to maximum health
         if (this.hp > 100) {
             this.hp = 100;
             renderHP();
@@ -82,23 +96,30 @@ class Player {
     }
 
     keyboardControls() {
+        // Check for speed bonus
         let speed = width * 0.01 * this.speedBonus;
+        // LEFT
         if (keyIsDown(37)) {
             this.x -= speed;
+            // If shift is held (16), do not change direction
             if (!keyIsDown(16)) this.dir = 3;
         }
+        // RIGHT
         else if (keyIsDown(39)) {
             this.x += speed;
             if (!keyIsDown(16)) this.dir = 1;
         }
+        // UP
         else if (keyIsDown(38)) {
             this.y -= speed;
             if (!keyIsDown(16)) this.dir = 0;
         }
+        // DOWN
         else if (keyIsDown(40)) {
             this.y += speed;
             if (!keyIsDown(16)) this.dir = 2;
         }
+        // Shoot
         if (keyIsDown(32) && this.canShoot) {
             const self = this;
             this.bullets.push(new Bullet(this.x + this.w / 2, this.y + this.h / 2, this.dir));
@@ -138,6 +159,7 @@ class Player {
     }
 
     findStartingPosition() {
+        // Recursive function, keeps running until user is not colliding with any walls
         this.x = random(width - this.w);
         this.y = random(height - this.h);
         for (let i = 0; i < walls.length; i++) {
@@ -146,19 +168,6 @@ class Player {
                 break;
             }
         }
-
-        // let wallCollision = true;
-        // while (wallCollision) {
-        //     wallCollision = false;
-        //     this.x = random(width - this.w);
-        //     this.y = random(height - this.h);
-        //     for (let i = 0; i < walls.length; i++) {
-        //         if (collides(walls[i], this)) {
-        //             wallCollision = true;
-        //             break;
-        //         }
-        //     }
-        // }
     }
 
     temporaryInvincibility(time) {

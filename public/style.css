@@ -25,6 +25,12 @@ button {
     cursor: pointer;
 }
 
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #enterName {
     position: fixed;
     width: 100vw;
@@ -42,10 +48,56 @@ button {
     pointer-events: auto;
 }
 
-#menu {
+#lobby {
     position: fixed;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background: black;
+    color: white;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    text-align: center;
+    font-size: 40px;
     opacity: 0;
     z-index: 9;
+    overflow-y: scroll;
+    pointer-events: none;
+}
+
+#listOfRooms {
+    width: 500px;
+    border: #AAAAAA 15px solid;
+    background: #888888;
+    height: 50vh;
+    min-height: 300px;
+    overflow-y: scroll;
+}
+
+.room {
+    border: 3px red solid;
+    font-size: 20px;
+}
+
+#createRoomBtn {
+    font-size: 40px;
+    display: inline-block;
+    min-height: 60px;
+}
+
+#passwordPrompt {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background: black;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    opacity: 0;
+    z-index: 11;
     pointer-events: none;
 }
 

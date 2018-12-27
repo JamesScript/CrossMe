@@ -16,12 +16,14 @@ function setup() {
     player = new Player(0, 0);
     player.findStartingPosition();
     socket.emit('get power up details');
+    socket.emit('update rooms');
 }
 
 function draw() {
+    // Do not draw anything to the canvas unless the user is not inside a room and active
     if (inGame) {
-        // Send the coordinates of player as proportion of width and height, as different players will have different sizes
         background(0);
+        // Visual effects of funky fungus
         if (player.tripping) {
             let blur = sin(frameCount / 8) * 2 + 3;
             $("canvas").css({filter: `blur(${blur}px)`, transform: `scale(${1 - blur / 50})`});
@@ -31,35 +33,42 @@ function draw() {
             $("canvas").css({filter: `blur(0px)`, transform: `scale(1)`});
             canvasFixed = true;
         }
-        // All bullets handled in player.show()
+        // Player
         if (player.alive) {
-            player.show();
+            player.show();    // All bullets handled in player.show()
             player.update();
         }
+        //Power Up
         if (powerUp) {
             powerUp.show();
             powerUp.update();
         }
+        // Walls
         for (let i = 0; i < walls.length; i++) {
             walls[i].show();
             walls[i].update();
         }
+        // Render Opponents - function to render all other players is called here
         renderOpponents();
+        // Send the coordinates of player as proportion of width and height, as different players will have different sized canvases
         let infoPackage = {
             x: player.x / width,
             y: player.y / height,
             hue: player.hue,
             name: name,
             id: id,
+            room: room,
             dir: player.dir,
             invincible: player.invincible,
             shielded: player.shielded,
             alive: player.alive,
             bullets: []
         };
+        // Add bullets to the package to be sent to the server and other players
         for (let i = 0; i < player.bullets.length; i++) {
             infoPackage.bullets.push([player.bullets[i].x / width, player.bullets[i].y / height]);
         }
+        // Send information to server
         socket.emit('player coordinates', JSON.stringify(infoPackage));
     }
 }
@@ -91,6 +100,7 @@ function gameMessage(msg) {
     socket.emit('game message', msg);
 }
 
+// Visual effects of colours under each player
 function trip(x, y) {
     push();
     rectMode(CENTER);
@@ -108,7 +118,4 @@ function trip(x, y) {
         rect(0, 0, i * gap + inc, i * gap + inc);
     }
     pop();
-    // let rSize = (frameCount % 5) * width * 0.01;
-    // fill(random(360), 100, 100);
-    // rect(this.x - rSize, this.y - rSize, this.w + rSize*2, this.h + rSize*2);
 }
