@@ -25,7 +25,11 @@ $(function () {
     });
 
     socket.on('update rooms', function (incoming) {
-        let parsed = JSON.parse(incoming);
+        buildRooms(incoming);
+    });
+
+    socket.on('room rejected', function (message) {
+        let parsed = JSON.parse(message);
     });
 
     socket.on('chat message', function (msg) {

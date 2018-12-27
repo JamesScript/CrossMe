@@ -8,7 +8,8 @@ class Wall {
 
     show() {
         let hue = player.tripping ? (frameCount * 10) % 360 : 195;
-        fill(hue, 25, 90);
+        let sat = player.tripping ? 80 : 25;
+        fill(hue, sat, 90);
         rect(this.x, this.y, this.w, this.h);
     }
 

@@ -45,7 +45,7 @@ class Player {
                 fill(200, 100, 100);
                 rect(this.x - sGap, this.y - sGap, this.w + sGap*2, this.h + sGap*2);
             }
-            fill(this.hue, 100, 100);
+            fill(this.hue, 70, 100);
             rect(this.x, this.y, this.w, this.h);
             fill(0);
             const eyeSize = width * 0.007;
