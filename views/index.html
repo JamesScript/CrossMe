@@ -52,6 +52,7 @@
         <form id="passwordForm">
             <label for="roomPassword">Password: </label>
             <input id="roomPassword" type="password">
+            <br>
             <button>ENTER</button>
         </form>
         <button id="backBtn">BACK</button>
@@ -59,12 +60,18 @@
     </div>
     <div id="createRoomScreen">
         <h1>Creating A Room</h1>
-        <form id="roomCreationForm">
-            <label for="creatingRoomName">Name: </label>
-            <input type="text" id="creatingRoomName">
-            <label for="creatingRoomPassword">Password: </label>
-            <input type="text" id="creatingRoomPassword" placeholder="Leave blank for a Public Room">
-        </form>
+        <div class="flexCenter">
+            <form id="roomCreationForm">
+                <div class="gridForm">
+                    <label for="creatingRoomName">Name: </label>
+                    <input type="text" id="creatingRoomName" maxlength="15" required>
+                    <label for="creatingRoomPassword">Password: </label>
+                    <input type="text" id="creatingRoomPassword" placeholder="Leave Blank for a Public Room">
+                </div>
+                <button>CREATE</button>
+            </form>
+        </div>
+        <button id="backBtnCreate">BACK</button>
     </div>
     <div id="deathScreen">
         <h1 id="youDied">YOU DIED!</h1>
@@ -87,7 +94,10 @@
                     </div>
                 </div>
                 <div class="killsContainer">
-                    <p>Kills: </p>
+                    <div class="flexCenter">
+                        <p>Kills: &nbsp;</p>
+                        <p id="killCount">0</p>
+                    </div>
                     <ol id="killList">
 
                     </ol>

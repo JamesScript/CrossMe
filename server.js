@@ -51,6 +51,18 @@ app.get('/checkIfPublic/:num', function(req, res) {
     res.send(output);
 });
 
+// Check if room name exists, deny creation of room if it does
+app.get('/checkIfRoomExists/:roomName', function(req, res) {
+    let proposedName = req.params.roomName;
+    for (let i = 0; i < rooms.length; i++) {
+        if (rooms[i].name === proposedName) {
+            return res.send("denied");
+        }
+    }
+    res.send("granted");
+});
+
+// Password Submission
 app.get('/passwordSubmission/:password&:desiredRoomNum', function(req, res) {
     // console.log(req.params.password);
     // console.log(req.params.desiredRoomNum);
@@ -87,7 +99,7 @@ io.on('connection', function (socket) {
         for (let i = 0; i < rooms.length; i++) {
             let count = 0;
             for (let j = 0; j < players.length; j++) {
-                if (rooms[i].name === players[j].room) {
+                if (rooms[i].numId === players[j].room) {
                     count++;
                 }
             }
@@ -100,13 +112,6 @@ io.on('connection', function (socket) {
     // User creates a room
     socket.on('create room', function (roomData) {
         let proposedRoom = JSON.parse(roomData);
-        for (let i = 0; i < rooms.length; i++) {
-            if (proposedRoom.name === rooms[i].name) {
-                // Name of user will be included, use this to show message for said user
-                return io.emit('room rejected', JSON.stringify(proposedRoom));
-            }
-        }
-        rooms.push(proposedRoom);
         // generate random numerical ID for room, check for clashes
         let idClash = true;
         let rndId = 0;
@@ -119,7 +124,8 @@ io.on('connection', function (socket) {
                 }
             }
         }
-        rooms[rooms.length-1].numId = rndId;
+        proposedRoom.numId = rndId;
+        rooms.push(proposedRoom);
         let output = {data: rooms};
         io.emit('update rooms', JSON.stringify(output));
     });

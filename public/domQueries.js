@@ -8,6 +8,7 @@ function domQueries() {
             .addClass("vanish");
         e.preventDefault();
         $('#lobby').css({"pointer-events": "auto", "opacity": "1"});
+        socket.emit("update rooms");
     });
 
     // Sending a message in the chat window
@@ -32,7 +33,6 @@ function domQueries() {
         let feedback = $("#passwordFeedback");
         let passwordToSubmit = passwordInput.val();
         $.get("/passwordSubmission/" + passwordToSubmit + "&" + desiredRoom, function(data) {
-            console.log(data);
             switch (data) {
                 case "missing":
                     feedback.text("Something went wrong, could not find room");
@@ -43,7 +43,22 @@ function domQueries() {
                 case "granted":
                     room = desiredRoom;
                     inGame = true;
+                    let infoPackage = {
+                        x: player.x / width,
+                        y: player.y / height,
+                        hue: player.hue,
+                        name: name,
+                        id: id,
+                        room: room,
+                        dir: player.dir,
+                        invincible: player.invincible,
+                        shielded: player.shielded,
+                        alive: player.alive,
+                        bullets: []
+                    };
+                    socket.emit('player coordinates', JSON.stringify(infoPackage));
                     $("#lobby").hide();
+                    socket.emit('update rooms');
                     hidePWScreen();
                     break;
                 default:
@@ -54,14 +69,68 @@ function domQueries() {
         passwordInput.val('');
     });
 
-    // Creating a new room
+    // Creating New Room - Pop up screen
+    $('#createRoomBtn').click(function() {
+        $("#createRoomScreen").css({"pointer-events": "auto", "opacity": "1"}).show();
+    });
+
+    // Submit New Room
     $('#roomCreationForm').submit(function(e) {
         e.preventDefault();
-
+        let proposedName = $("#creatingRoomName");
+        let proposedPassword = $("#creatingRoomPassword");
+        $.get("/checkIfRoomExists/" + proposedName.val(), function(data) {
+            // If name is allowed
+            if (data === "granted") {
+                let roomObj = {
+                    name: proposedName.val(),
+                    password: proposedPassword.val(),
+                    activePlayers: 0
+                };
+                socket.emit("create room", JSON.stringify(roomObj));
+                $("#createRoomScreen").hide();
+                socket.emit("update rooms");
+            } else {
+                // Name already exists or otherwise rejected
+                console.log("denied");
+            }
+            proposedName.val("");
+            proposedPassword.val("")
+        });
     });
 
     // Button to back out of password prompt screen
     $('#backBtn').click(function() {
         hidePWScreen();
+    });
+
+    $('#backBtnCreate').click(function() {
+        $("#createRoomScreen").css({"pointer-events": "none", "opacity": "0"}).hide();
+    });
+
+    // Leave Current Room, exit game to Lobby
+    $("#leaveRoom").click(function () {
+        room = null;
+        inGame = false;
+        player.shielded = player.tripping = player.invincible = false;
+        player.hp = 100;
+        player.kills = 0;
+        let infoPackage = {
+            x: player.x / width,
+            y: player.y / height,
+            hue: player.hue,
+            name: name,
+            id: id,
+            room: room,
+            dir: player.dir,
+            invincible: player.invincible,
+            shielded: player.shielded,
+            alive: player.alive,
+            bullets: []
+        };
+        socket.emit('player coordinates', JSON.stringify(infoPackage));
+        // $('#lobby').css({"pointer-events": "auto", "opacity": "1"});
+        $('#lobby').show();
+        socket.emit("update rooms");
     });
 }

@@ -18,14 +18,6 @@ $(function () {
         buildRooms(incoming);
     });
 
-    // Create room NEEDS TO START WITH REQUEST TO SERVER SO THAT IP ADDRESS CAN BE MONITORED
-
-    // Room rejected - usually if the name is already taken
-    socket.on('room rejected', function (message) {
-        let parsed = JSON.parse(message);
-        // Consider checking IP address to make sure they're not spamming rooms
-    });
-
     // When message is sent by anyone, append it to the chat window
     socket.on('chat message', function (msg) {
         $('#messages').append($('<li>').text(msg));

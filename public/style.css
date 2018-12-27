@@ -70,15 +70,29 @@ button {
 #listOfRooms {
     width: 500px;
     border: #AAAAAA 15px solid;
-    background: #888888;
+    background: #111111;
     height: 50vh;
     min-height: 300px;
     overflow-y: scroll;
 }
 
 .room {
-    border: 3px red solid;
     font-size: 20px;
+    display: flex;
+    justify-content: space-around;
+    cursor: pointer;
+}
+
+.roomOddShade {
+    background: #444444;
+}
+
+.roomEvenShade {
+    background: #333333;
+}
+
+.room:hover {
+    background: gold;
 }
 
 #createRoomBtn {
@@ -101,7 +115,7 @@ button {
     pointer-events: none;
 }
 
-#passwordPrompt button {
+#passwordPrompt button, #createRoomScreen button {
     font-size: 20px;
 }
 
@@ -126,6 +140,15 @@ button {
     opacity: 0;
     z-index: 12;
     pointer-events: none;
+}
+
+.gridForm {
+    display: grid;
+    grid-template-columns: 200px 300px;
+}
+
+#roomCreationForm input{
+    font-size: 20px;
 }
 
 #deathScreen {
@@ -190,6 +213,7 @@ button {
     border: #878787 inset 10px;
     color: white;
     text-align: center;
+    font-size: 20px;
 }
 
 .hpContainer {
