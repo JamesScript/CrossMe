@@ -1,7 +1,6 @@
 // Dependencies imported
 const express = require('express');
 const app = express();
-const expressip = require('express-ip');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const shortid = require('shortid');
@@ -9,8 +8,8 @@ const shortid = require('shortid');
 // Global variables for game, things that will be changed according to user activity
 let players = [];
 let rooms = [
-    {name: "The Room", password: "", playerCount: 0, numId: 261085, authorIP: null, authorId: null},
-    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorIP: null, authorId: null}
+    {name: "The Room", password: "", playerCount: 0, numId: 261085, authorId: null},
+    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorId: null}
 ];
 
 // Power up variables
@@ -22,9 +21,6 @@ let powerUpFailSafe; // Respawns power up in case the client who's got the setTi
 
 // Use (JS, CSS) files in Public folder
 app.use(express.static('public'));
-
-// Use npm package for checking IP addresses to avoid spamming of rooms
-app.use(expressip().getIpInfoMiddleware);
 
 // Send index.html
 app.get('/', function (req, res) {
@@ -61,8 +57,6 @@ app.get('/checkIfRoomExists/:roomName', function(req, res) {
             return res.send("Room with that name already exists");
         }
     }
-    // Check IP Address
-    console.log(req.ipInfo);
     // String "granted" grants access - see domQueries.js
     res.send("granted");
 });
