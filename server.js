@@ -8,8 +8,9 @@ const shortid = require('shortid');
 
 // Global variables for game, things that will be changed according to user activity
 let players = [];
-let rooms = [{name: "The Room", password: "", playerCount: 0, numId: 261085, authorIP: null},
-    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorIP: null}
+let rooms = [
+    {name: "The Room", password: "", playerCount: 0, numId: 261085, authorIP: null, authorId: null},
+    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorIP: null, authorId: null}
 ];
 
 // Power up variables
@@ -53,12 +54,16 @@ app.get('/checkIfPublic/:num', function(req, res) {
 
 // Check if room name exists, deny creation of room if it does
 app.get('/checkIfRoomExists/:roomName', function(req, res) {
+    // Check name
     let proposedName = req.params.roomName;
     for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].name === proposedName) {
-            return res.send("denied");
+            return res.send("Room with that name already exists");
         }
     }
+    // Check IP Address
+    console.log(req.ipInfo);
+    // String "granted" grants access - see domQueries.js
     res.send("granted");
 });
 

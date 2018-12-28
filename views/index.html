@@ -40,8 +40,15 @@
     <div id="lobby">
         <h1>Choose A Room or Host One Yourself</h1>
         <div class="flexCenter">
-            <div id="listOfRooms">
+            <div class="roomListContainer">
+                <div class="searchBarContainer">
+                    <label id="magnifyingGlass" for="searchBar">&#128269;</label>
+                    <input type="text" id="searchBar" onkeyup="searchRoom()">
+                </div>
+                <div id="listOfRooms">
 
+                </div>
+                <div id="noMatches">NO MATCHES</div>
             </div>
         </div>
         <br>
@@ -72,6 +79,7 @@
             </form>
         </div>
         <button id="backBtnCreate">BACK</button>
+        <div id="deniedMessage"></div>
     </div>
     <div id="deathScreen">
         <h1 id="youDied">YOU DIED!</h1>

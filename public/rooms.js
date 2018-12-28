@@ -2,19 +2,18 @@ function buildRooms(roomInfo) {
     let parsed = JSON.parse(roomInfo);
     let roomList = parsed.data;
     let output = [];
-    // console.log(roomList);
+    console.log(roomList);
     for (let i = 0; i < roomList.length; i++) {
         let shade = i % 2 === 0 ? "roomEvenShade" : "roomOddShade";
+        let lock = roomList[i].password.length > 0 ? "&#128274;" : "";
         output.push(`<div onclick="enterRoom(${roomList[i].numId})" class="room ${shade}">`);
-        output.push(`<p>${roomList[i].name}</p>`);
+        // First child element is room list, search bar uses data from first children element so keep in mind for changes
+        output.push(`<p>${roomList[i].name} ${lock}</p>`);
         output.push(`<p>Active Players: ${roomList[i].playerCount}</p>`);
         output.push('</div>');
     }
     $('#listOfRooms').html(output.join(""));
-}
-
-function submitRoom(submissionInfo) {
-
+    searchRoom(); // Removes ones that are not in the search query
 }
 
 function enterRoom(roomNum) {
@@ -53,3 +52,21 @@ function enterRoom(roomNum) {
     });
 }
 
+function searchRoom() {
+    let query = $("#searchBar").val();
+    let roomElements = $("#listOfRooms").children();
+    let qReg = new RegExp(query, "gi");
+    let anyMatches = false;
+    for (let i = 0; i < roomElements.length; i++) {
+        // SEARCHING FOR NAME BY FIRST ELEMENT, ADDING ELEMENT BEFORE WILL CAUSE BUG
+        let roomName = roomElements[i].firstElementChild.textContent;
+        if (qReg.test(roomName)) {
+            roomElements[i].style.display = "flex";
+            anyMatches = true;
+        } else {
+            roomElements[i].style.display = "none";
+        }
+    }
+    let nmMsg = $("#noMatches");
+    anyMatches ? nmMsg.hide() : nmMsg.show();
+}

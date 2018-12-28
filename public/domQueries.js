@@ -92,7 +92,7 @@ function domQueries() {
                 socket.emit("update rooms");
             } else {
                 // Name already exists or otherwise rejected
-                console.log("denied");
+                $("#deniedMessage").text("Denied: " + data);
             }
             proposedName.val("");
             proposedPassword.val("")
@@ -133,4 +133,6 @@ function domQueries() {
         $('#lobby').show();
         socket.emit("update rooms");
     });
+
+
 }
