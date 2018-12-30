@@ -50,26 +50,11 @@ function draw() {
         }
         // Render Opponents - function to render all other players is called here
         renderOpponents();
-        // Send the coordinates of player as proportion of width and height, as different players will have different sized canvases
-        let infoPackage = {
-            x: player.x / width,
-            y: player.y / height,
-            hue: player.hue,
-            name: name,
-            id: id,
-            room: room,
-            dir: player.dir,
-            invincible: player.invincible,
-            shielded: player.shielded,
-            alive: player.alive,
-            bullets: []
-        };
-        // Add bullets to the package to be sent to the server and other players
-        for (let i = 0; i < player.bullets.length; i++) {
-            infoPackage.bullets.push([player.bullets[i].x / width, player.bullets[i].y / height]);
+        updatePlayerDetails();
+        // Update leader board every 10 frames
+        if (frameCount % 10 === 0) {
+            updateLeaderBoard();
         }
-        // Send information to server
-        socket.emit('player coordinates', JSON.stringify(infoPackage));
     }
 }
 
@@ -118,4 +103,53 @@ function trip(x, y) {
         rect(0, 0, i * gap + inc, i * gap + inc);
     }
     pop();
+}
+
+function enterGame() {
+    inGame = true;
+    updatePlayerDetails();
+    socket.emit('update rooms');
+    $("#lobby").hide();
+    player.findStartingPosition();
+}
+
+function updatePlayerDetails() {
+    // Send the coordinates of player as proportion of width and height, as different players will have different sized canvases
+    let infoPackage = {
+        x: player.x / width,
+        y: player.y / height,
+        hue: player.hue,
+        name: name,
+        id: id,
+        room: room,
+        kills: player.kills,
+        dir: player.dir,
+        invincible: player.invincible,
+        shielded: player.shielded,
+        alive: player.alive,
+        bullets: []
+    };
+    // Add bullets to the package to be sent to the server and other players
+    for (let i = 0; i < player.bullets.length; i++) {
+        infoPackage.bullets.push([player.bullets[i].x / width, player.bullets[i].y / height]);
+    }
+    socket.emit('player coordinates', JSON.stringify(infoPackage));
+}
+
+function updateLeaderBoard() {
+    $("#killCount").text(player.kills);
+    let toSort = opponents.slice().map(function(el) {
+        return {name: el.name, kills: el.kills};
+    });
+    toSort.sort(function(a,b) {
+        return b.kills - a.kills;
+    });
+    while (toSort.length > 3) {
+        toSort.pop();
+    }
+    const killList = $("#killList");
+    killList.html("");
+    for (let i = 0; i < toSort.length; i++) {
+        killList.append($("<li>").text(toSort[i].name + " : " + toSort[i].kills));
+    }
 }

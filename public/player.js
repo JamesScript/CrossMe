@@ -57,15 +57,22 @@ class Player {
             rect(this.x, this.y, this.w, this.h);
             // Eyes
             fill(0);
-            const eyeSize = width * 0.007;
+            const eyeSize = width * 0.012;
             if (player.tripping) {
                 // Eye colours go crazy during funky fungus effects
                 const count = 100;
                 let tripHue = map(frameCount % count, 0, count, 0, 360);
                 fill(tripHue, 100, 100);
             }
-            ellipse(this.x + this.w * (this.dir === 1 ? 0.75 : 0.25), this.y + this.h * (this.dir === 2 ? 0.75 : 0.25), eyeSize);
-            ellipse(this.x + this.w * (this.dir === 3 ? 0.25 : 0.75), this.y + this.h * (this.dir === 0 ? 0.25 : 0.75), eyeSize);
+            const eyeOne = [this.x + this.w * (this.dir === 1 ? 0.75 : 0.25), this.y + this.h * (this.dir === 2 ? 0.75 : 0.25)];
+            const eyeTwo = [this.x + this.w * (this.dir === 3 ? 0.25 : 0.75), this.y + this.h * (this.dir === 0 ? 0.25 : 0.75)];
+            ellipse(eyeOne[0], eyeOne[1], eyeSize);
+            ellipse(eyeTwo[0], eyeTwo[1], eyeSize);
+            fill(0, 0, 100);
+            const xOff = 1.005;
+            const yOff = 0.995;
+            ellipse(eyeOne[0] * xOff, eyeOne[1] * yOff, eyeSize / 3);
+            ellipse(eyeTwo[0] * xOff, eyeTwo[1] * yOff, eyeSize / 3);
         }
     }
 
@@ -134,7 +141,9 @@ class Player {
     death() {
         this.hp = 0;
         this.alive = false;
-        gameMessage(name + " was killed by " + this.killedBy);
+        // this.killedBy needs to be the user's ID not their name, in case of duplicate names
+        gameMessage(name + " was killed by " + this.killedBy.name);
+        socket.emit("kill increment", this.killedBy.id);
         this.deathCountdown(5);
         $("#deathScreen").addClass("appear");
         renderHP();

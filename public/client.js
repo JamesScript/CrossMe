@@ -18,6 +18,20 @@ $(function () {
         buildRooms(incoming);
     });
 
+    // Kick  players from deleted room
+    socket.on('kick players', function (roomN) {
+        if (room === roomN) {
+            player.hp = 100;
+            player.kills = 0;
+            player.tripping = false;
+            player.shielded = false;
+            inGame = false;
+            room = null;
+            desiredRoom = null; // check if necessary
+            $("#lobby").show();
+        }
+    });
+    
     // When message is sent by anyone, append it to the chat window
     socket.on('chat message', function (msg) {
         $('#messages').append($('<li>').text(msg));
@@ -71,5 +85,14 @@ $(function () {
     socket.on('player coordinates', function (coords) {
         let incoming = JSON.parse(coords);
         opponents = incoming.data;
+    });
+
+    // Increase kill count by one and update everyone
+    socket.on('kill increment', function (person) {
+        // Person is the id the user, not the name
+        if (person === id) {
+            player.kills++;
+        }
+        updatePlayerDetails();
     });
 });

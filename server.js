@@ -5,14 +5,24 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const shortid = require('shortid');
 
+// Defining how to generate a power up object
+class PowerUp {
+    constructor(x = 0.5, y = 0.5, type = "health", got = false) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+        this.got = got;
+    }
+}
+
 // Global variables for game, things that will be changed according to user activity
 let players = [];
 let rooms = [
-    {name: "The Room", password: "", playerCount: 0, numId: 261085, authorId: null},
-    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorId: null}
+    {name: "The Room", password: "", playerCount: 0, numId: 261085, authorId: null, powerUp: new PowerUp()},
+    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorId: null, powerUp: new PowerUp()}
 ];
 
-// Power up variables
+// // Power up variables
 let lastPowerUpX = 0.5;
 let lastPowerUpY = 0.5;
 let lastPowerUpType = "health";
@@ -49,13 +59,28 @@ app.get('/checkIfPublic/:num', function(req, res) {
 });
 
 // Check if room name exists, deny creation of room if it does
-app.get('/checkIfRoomExists/:roomName', function(req, res) {
-    // Check name
-    let proposedName = req.params.roomName;
+app.get('/checkIfRoomExists/:roomData', function(req, res) {
+    // Check name length
+    let roomData = JSON.parse(req.params.roomData);
+    let proposedName = roomData.name;
+    let proposedId = roomData.id;
+    if (proposedName.length > 15) {
+        return res.send("Room name too long");
+    } else if (proposedName.length < 1) {
+        return res.send("Room name too short");
+    }
+    // Check if name exists, or if user (by id) has submitted too many rooms
+    let idMatches = 0;
     for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].name === proposedName) {
             return res.send("Room with that name already exists");
         }
+        if (rooms[i].authorId === proposedId) {
+            idMatches++;
+        }
+    }
+    if (idMatches > 10) {
+        return res.send("You've made too many rooms, consider deleting some");
     }
     // String "granted" grants access - see domQueries.js
     res.send("granted");
@@ -80,6 +105,29 @@ app.get('/passwordSubmission/:password&:desiredRoomNum', function(req, res) {
         }
     }
     res.send(output);
+});
+
+app.get('/checkIfCanDeleteRoom/:deletionData', function (req, res) {
+    let deletionData = JSON.parse(req.params.deletionData);
+    let roomNum = deletionData.roomNum;
+    let userId = deletionData.userId;
+    for (let i = 0; i < rooms.length; i++) {
+        if (roomNum === rooms[i].numId) {
+            let granted = rooms[i].authorId === userId;
+            if (granted) {
+                rooms.splice(i, 1);
+                let output = {data: rooms};
+                io.emit('update rooms', JSON.stringify(output));
+                // Kick players out if they're in the room i.e. show lobby
+                io.emit('kick players', roomNum);
+            }
+            // Prevent players from hack-deleting the main rooms
+            if (userId === null) {
+                granted = false;
+            }
+            return res.send(granted);
+        }
+    }
 });
 
 // Manage socket connections
@@ -154,7 +202,7 @@ io.on('connection', function (socket) {
         for (let i = 0; i < players.length; i++) {
             if (players[i].id === coordsObject.id) {
                 // Each property that is required to broadcast for each player in contained in the array below 'props'
-                const props = "x y name room bullets dir invincible shielded alive".split(" ");
+                const props = "x y name id room bullets dir invincible kills shielded alive".split(" ");
                 for (let j = 0; j < props.length; j++) {
                     players[i][props[j]] = coordsObject[props[j]];
                 }
@@ -213,6 +261,10 @@ io.on('connection', function (socket) {
             got: powerUpGot
         };
         io.emit('get power up details', JSON.stringify(details));
+    });
+
+    socket.on('kill increment', function(person) {
+        io.emit('kill increment', person);
     });
 });
 

@@ -86,7 +86,7 @@ button {
 #searchBar {
     width: 100%;
     max-width: 100%;
-    padding-left: 20px;
+    padding-left: 30px;
     height: 24px;
     font-size: 20px;
     display: block;
@@ -214,7 +214,7 @@ button {
 }
 
 #msgContainer {
-    height: calc(90vh - 270px);
+    height: calc(90vh - 320px);
     overflow-y: scroll;
     background: #AAAAAA;
     padding: 0;
@@ -234,7 +234,7 @@ button {
 }
 
 #stats {
-    height: 230px;
+    height: 280px;
     border: #878787 inset 10px;
     color: white;
     text-align: center;
@@ -267,6 +267,13 @@ button {
 
 #leaveRoom {
     font-size: 20px;
+}
+
+#deleteRoom {
+    font-size: 20px;
+    background: #FF5555;
+    /*display: none;*/
+    /*color: black;*/
 }
 
 #chatWindow {
