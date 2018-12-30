@@ -2,7 +2,7 @@ function buildRooms(roomInfo) {
     let parsed = JSON.parse(roomInfo);
     let roomList = parsed.data;
     let output = [];
-    console.log(roomList);
+    // console.log(roomList);
     for (let i = 0; i < roomList.length; i++) {
         let shade = i % 2 === 0 ? "roomEvenShade" : "roomOddShade";
         let lock = roomList[i].password.length > 0 ? "&#128274;" : "";
@@ -25,23 +25,7 @@ function enterRoom(roomNum) {
         // No password i.e. public
         if (data === "public") {
             room = roomNum;
-            inGame = true;
-            let infoPackage = {
-                x: player.x / width,
-                y: player.y / height,
-                hue: player.hue,
-                name: name,
-                id: id,
-                room: room,
-                dir: player.dir,
-                invincible: player.invincible,
-                shielded: player.shielded,
-                alive: player.alive,
-                bullets: []
-            };
-            socket.emit('player coordinates', JSON.stringify(infoPackage));
-            socket.emit("update rooms");
-            $("#lobby").hide();
+            enterGame();
         }
         // Password exists
         else {

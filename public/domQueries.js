@@ -42,23 +42,7 @@ function domQueries() {
                     break;
                 case "granted":
                     room = desiredRoom;
-                    inGame = true;
-                    let infoPackage = {
-                        x: player.x / width,
-                        y: player.y / height,
-                        hue: player.hue,
-                        name: name,
-                        id: id,
-                        room: room,
-                        dir: player.dir,
-                        invincible: player.invincible,
-                        shielded: player.shielded,
-                        alive: player.alive,
-                        bullets: []
-                    };
-                    socket.emit('player coordinates', JSON.stringify(infoPackage));
-                    $("#lobby").hide();
-                    socket.emit('update rooms');
+                    enterGame();
                     hidePWScreen();
                     break;
                 default:
@@ -79,13 +63,18 @@ function domQueries() {
         e.preventDefault();
         let proposedName = $("#creatingRoomName");
         let proposedPassword = $("#creatingRoomPassword");
-        $.get("/checkIfRoomExists/" + proposedName.val(), function(data) {
+        let checkingPackage = {
+            name: proposedName.val(),
+            id: id
+        };
+        $.get("/checkIfRoomExists/" + JSON.stringify(checkingPackage), function(data) {
             // If name is allowed
             if (data === "granted") {
                 let roomObj = {
                     name: proposedName.val(),
                     password: proposedPassword.val(),
-                    activePlayers: 0
+                    activePlayers: 0,
+                    authorId: id
                 };
                 socket.emit("create room", JSON.stringify(roomObj));
                 $("#createRoomScreen").hide();
@@ -115,24 +104,25 @@ function domQueries() {
         player.shielded = player.tripping = player.invincible = false;
         player.hp = 100;
         player.kills = 0;
-        let infoPackage = {
-            x: player.x / width,
-            y: player.y / height,
-            hue: player.hue,
-            name: name,
-            id: id,
-            room: room,
-            dir: player.dir,
-            invincible: player.invincible,
-            shielded: player.shielded,
-            alive: player.alive,
-            bullets: []
-        };
-        socket.emit('player coordinates', JSON.stringify(infoPackage));
-        // $('#lobby').css({"pointer-events": "auto", "opacity": "1"});
+        updatePlayerDetails();
         $('#lobby').show();
         socket.emit("update rooms");
     });
 
-
+    // Delete room button
+    $("#deleteRoom").click(function () {
+        if (confirm("Are you sure you want to delete this room? All players will be kicked out of this game")) {
+            let checkingPackage = {
+                roomNum: room,
+                userId: id
+            };
+            $.get("/checkIfCanDeleteRoom/" + JSON.stringify(checkingPackage), function(accessGranted) {
+                if (accessGranted) {
+                    console.log("Room deleted");
+                } else {
+                    alert("You do not have permission to delete this room.");
+                }
+            });
+        }
+    });
 }
