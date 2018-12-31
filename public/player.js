@@ -54,7 +54,7 @@ class Player {
             }
             // Body
             fill(this.hue, 70, 100);
-            rect(this.x, this.y, this.w, this.h);
+            rect(this.x, this.y, this.w, this.h, width / 200);
             // Eyes
             fill(0);
             const eyeSize = width * 0.012;
