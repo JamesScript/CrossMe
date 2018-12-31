@@ -8,7 +8,8 @@ class Bullet {
     }
 
     show() {
-        fill(0, 100, 100);
+        let hue = player.tripping ? (frameCount * 10) % 360 : 0;
+        fill(hue, 70, 100);
         ellipse(this.x, this.y, this.w);
     }
 

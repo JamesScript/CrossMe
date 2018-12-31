@@ -15,6 +15,70 @@ class PowerUp {
     }
 }
 
+// Coordinates and dimensions of original level design / walls proportionate to width and height
+const defaultLevel = [
+    {
+        "x": 0.1,
+        "y": 0.1,
+        "w": 0.3,
+        "h": 0.1
+    },
+    {
+        "x": 0.1,
+        "y": 0.2,
+        "w": 0.1,
+        "h": 0.2
+    },
+    {
+        "x": 0.1,
+        "y": 0.8,
+        "w": 0.3,
+        "h": 0.1
+    },
+    {
+        "x": 0.1,
+        "y": 0.6,
+        "w": 0.1,
+        "h": 0.2
+    },
+    {
+        "x": 0.6,
+        "y": 0.1,
+        "w": 0.3,
+        "h": 0.1
+    },
+    {
+        "x": 0.8,
+        "y": 0.2,
+        "w": 0.1,
+        "h": 0.2
+    },
+    {
+        "x": 0.6,
+        "y": 0.8,
+        "w": 0.3,
+        "h": 0.1
+    },
+    {
+        "x": 0.8,
+        "y": 0.6,
+        "w": 0.1,
+        "h": 0.2
+    },
+    {
+        "x": 0.3,
+        "y": 0.3,
+        "w": 0.4,
+        "h": 0.1
+    },
+    {
+        "x": 0.3,
+        "y": 0.6,
+        "w": 0.4,
+        "h": 0.1
+    }
+];
+
 // Global variables for game, things that will be changed according to user activity
 let players = [];
 let rooms = [
@@ -127,6 +191,7 @@ app.get('/passwordSubmission/:password&:desiredRoomNum', function(req, res) {
     res.send(output);
 });
 
+// Deleting a room
 app.get('/checkIfCanDeleteRoom/:deletionData', function (req, res) {
     let deletionData = JSON.parse(req.params.deletionData);
     let roomNum = deletionData.roomNum;
@@ -150,6 +215,17 @@ app.get('/checkIfCanDeleteRoom/:deletionData', function (req, res) {
     }
 });
 
+// Getting power up details for the room you are in
+app.get("/powerUpDetails/:roomNum", function(req, res) {
+    let roomNum = Number(req.params.roomNum);
+    for (let i = 0; i < rooms.length; i++) {
+        if (rooms[i].numId === roomNum) {
+            console.log(rooms[i].powerUp);
+            return res.json(rooms[i].powerUp);
+        }
+    }
+});
+
 // Manage socket connections
 io.on('connection', function (socket) {
     console.log('a user connected');
@@ -169,11 +245,11 @@ io.on('connection', function (socket) {
                 if (rooms[i].numId === players[j].room) {
                     count++;
                 }
-            }let output = {data: rooms};
-            io.emit('update rooms', JSON.stringify(output));
+            }
             rooms[i].playerCount = count;
         }
-
+        let output = {data: rooms};
+        io.emit('update rooms', JSON.stringify(output));
     });
 
     // User creates a room
@@ -193,6 +269,7 @@ io.on('connection', function (socket) {
         }
         proposedRoom.numId = rndId;
         proposedRoom.seconds = roomLife;
+        proposedRoom.playerCount = 0;
         rooms.push(proposedRoom);
         let output = {data: rooms};
         io.emit('update rooms', JSON.stringify(output));
@@ -274,15 +351,16 @@ io.on('connection', function (socket) {
     });
 
     // Get details of existing power up when user connects
-    socket.on('get power up details', function () {
-        let details = {
-            x: lastPowerUpX,
-            y: lastPowerUpY,
-            type: lastPowerUpType,
-            got: powerUpGot
-        };
-        io.emit('get power up details', JSON.stringify(details));
-    });
+    // REPLACING WITH app.get see above
+    // socket.on('get power up details', function () {
+    //     let details = {
+    //         x: lastPowerUpX,
+    //         y: lastPowerUpY,
+    //         type: lastPowerUpType,
+    //         got: powerUpGot
+    //     };
+    //     io.emit('get power up details', JSON.stringify(details));
+    // });
 
     socket.on('kill increment', function(person) {
         io.emit('kill increment', person);

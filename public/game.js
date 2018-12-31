@@ -15,7 +15,7 @@ function setup() {
     cornersLevel();
     player = new Player(0, 0);
     player.findStartingPosition();
-    socket.emit('get power up details');
+    // socket.emit('get power up details');
     socket.emit('update rooms');
 }
 
@@ -46,7 +46,13 @@ function draw() {
         // Walls
         for (let i = 0; i < walls.length; i++) {
             walls[i].show();
+        }
+        for (let i = 0; i < walls.length; i++) {
             walls[i].update();
+            if (walls[i].resetForLoop) {
+                walls[i].resetForLoop = false;
+                i = -1;
+            }
         }
         // Render Opponents - function to render all other players is called here
         renderOpponents();
@@ -59,16 +65,31 @@ function draw() {
 }
 
 function windowResized() {
+    // Get coordinagtes of objects as proportions of height and width
     let playerPropX = player.x / width;
     let playerPropY = player.y / height;
+    let powerUpPropX;
+    let powerUpPropY;
+    if (powerUp) {
+        powerUpPropX = powerUp.x / width;
+        powerUpPropY = powerUp.y / height;
+    }
     const gameContainer = $("#gameContainer")[0];
     const smallerDim = gameContainer.clientWidth < gameContainer.clientHeight ? gameContainer.clientWidth : gameContainer.clientHeight;
+    // Resize Canvas
     resizeCanvas(smallerDim, smallerDim);
     walls = [];
+    // Relocate objects according to new width and height
     player.x = playerPropX * width;
     player.y = playerPropY * height;
-    player.w = powerUp.w = width * 0.03;
-    player.h = powerUp.h = height * 0.03;
+    player.w = width * 0.03;
+    player.h = height * 0.03;
+    if (powerUp) {
+        powerUp.x = powerUpPropX * width;
+        powerUp.y = powerUpPropY * height;
+        powerUp.w = width * 0.03;
+        powerUp.h = height * 0.03;
+    }
     cornersLevel();
 }
 
@@ -116,6 +137,9 @@ function enterGame() {
     $("#messages").html("");
     $("#lobby").hide();
     player.findStartingPosition();
+    $.get("/powerUpDetails/"+room, function(data) {
+        powerUp = new PowerUp(data.x, data.y, data.type, data.got);
+    });
 }
 
 function updatePlayerDetails() {

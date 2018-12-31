@@ -4,6 +4,7 @@ class Wall {
         this.y = y;
         this.w = w;
         this.h = h;
+        this.resetForLoop = false;
     }
 
     show() {
@@ -11,6 +12,22 @@ class Wall {
         let sat = player.tripping ? 80 : 25;
         fill(hue, sat, 90);
         rect(this.x, this.y, this.w, this.h);
+        const lineHeight = height * 0.02;
+        const lineWidth = width * 0.04;
+        for (let i = 0; i < floor(this.h / lineHeight); i++) {
+            stroke(hue, sat, 70);
+            line(this.x, this.y + i * lineHeight, this.x + this.w, this.y + i * lineHeight);
+            for (let j = 0; j < ceil(this.w / lineWidth); j++) {
+                let xPos = this.x + j * lineWidth;
+                if (i % 2 === 0) {
+                    xPos += lineWidth / 2;
+                }
+                if (xPos < this.x + this.w - 1) {
+                    line(xPos, this.y + i * lineHeight, xPos, this.y + i * lineHeight + lineHeight);
+                }
+            }
+            noStroke();
+        }
     }
 
     update() {
@@ -22,6 +39,7 @@ class Wall {
             } else {
                 player.x = self.x + self.w;
             }
+            self.resetForLoop = true;
         };
         const pushVertical = function() {
             // Determine whether player was previously on the above or bottom of the center of the wall
@@ -30,16 +48,20 @@ class Wall {
             } else {
                 player.y = self.y + self.h;
             }
+            self.resetForLoop = true;
         };
         // Push to edge
         if (collides(this, player)) {
             if (player.y > this.y && player.y + player.h < this.y + this.h) {
                 pushHorizontal();
+                // console.log("horizontal");
             } else if (player.x > this.x && player.x + player.w < this.x + this.w) {
                 pushVertical();
+                // console.log("vertical");
             } else {
                 pushHorizontal();
                 pushVertical();
+                // console.log("both");
             }
         }
         // Collision detection

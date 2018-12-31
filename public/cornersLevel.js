@@ -10,3 +10,14 @@ function cornersLevel() {
     walls[8] = new Wall(width * 0.3, height * 0.3, width * 0.4, height * 0.1);
     walls[9] = new Wall(width * 0.3, height * 0.6, width * 0.4, height * 0.1);
 }
+
+function getWallDecimalDimensions() {
+    return walls.map(wall => {
+       return {
+           x: wall.x / width,
+           y: wall.y / height,
+           w: wall.w / width,
+           h: wall.h / height
+       };
+    });
+}

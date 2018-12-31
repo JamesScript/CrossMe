@@ -18,7 +18,7 @@ $(function () {
         buildRooms(incoming);
     });
 
-    // Kick  players from deleted room
+    // Kick players from deleted room
     socket.on('kick players', function (roomN) {
         if (room === roomN) {
             player.hp = 100;
@@ -79,13 +79,14 @@ $(function () {
     });
 
     // Get details of existing power up from server when joining the game
-    socket.on('get power up details', function(details) {
-        let potentialPowerUp = JSON.parse(details);
-        powerUp = new PowerUp(potentialPowerUp.x, potentialPowerUp.y, potentialPowerUp.type);
-        if (potentialPowerUp.got) {
-            powerUp.got = true;
-        }
-    });
+    // REPLACED WITH GET REQUEST IN game.js enterGame()
+    // socket.on('get power up details', function(details) {
+    //     let potentialPowerUp = JSON.parse(details);
+    //     powerUp = new PowerUp(potentialPowerUp.x, potentialPowerUp.y, potentialPowerUp.type);
+    //     if (potentialPowerUp.got) {
+    //         powerUp.got = true;
+    //     }
+    // });
 
     // Get information on the other players and put them in the array to be rendered
     socket.on('player coordinates', function (coords) {

@@ -1,11 +1,11 @@
 class PowerUp {
-    constructor(x, y, type) {
+    constructor(x, y, type, got) {
         this.x = x * width;
         this.y = y * height;
         this.w = player.w;
         this.h = player.h;
         this.type = type;
-        this.got = false;
+        this.got = got;
         this.duration = 8000;
         this.respawnTime = 10000;
     }
