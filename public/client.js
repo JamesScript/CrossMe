@@ -34,16 +34,22 @@ $(function () {
     
     // When message is sent by anyone, append it to the chat window
     socket.on('chat message', function (msg) {
-        $('#messages').append($('<li>').text(msg));
-        const container = $('#msgContainer');
-        container.scrollTop(container[0].scrollHeight);
+        const msgObject = JSON.parse(msg);
+        if (msgObject.roomId === roomNum) {
+            $('#messages').append($('<li>').text(msgObject.msg));
+            const container = $('#msgContainer');
+            container.scrollTop(container[0].scrollHeight);
+        }
     });
 
     // Messages from the game about events such as kill or item found
     socket.on('game message', function(msg) {
-        $('#messages').append($('<li class="gameMsg">').text(msg));
-        const container = $('#msgContainer');
-        container.scrollTop(container[0].scrollHeight);
+        const msgObject = JSON.parse(msg);
+        if (msgObject.roomId === room) {
+            $('#messages').append($('<li class="gameMsg">').text(msgObject.msg));
+            const container = $('#msgContainer');
+            container.scrollTop(container[0].scrollHeight);
+        }
     });
 
     // Remove bullet from game when Splice Bullet is broadcast
@@ -84,7 +90,10 @@ $(function () {
     // Get information on the other players and put them in the array to be rendered
     socket.on('player coordinates', function (coords) {
         let incoming = JSON.parse(coords);
-        opponents = incoming.data;
+        // Only keep those who are in the same room
+        opponents = incoming.data.filter(function(e) {
+           return e.room === room;
+        });
     });
 
     // Increase kill count by one and update everyone

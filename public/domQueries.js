@@ -14,7 +14,11 @@ function domQueries() {
     // Sending a message in the chat window
     $('#chatForm').submit(function () {
         const m = $('#m');
-        socket.emit('chat message', name + ": " + m.val());
+        const msgObject = {
+            msg: name + ": " + m.val(),
+            roomId: roomNum
+        };
+        socket.emit('chat message', JSON.stringify(msgObject));
         m.val('');
         return false;
     });

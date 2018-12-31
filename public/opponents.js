@@ -1,7 +1,7 @@
 function renderOpponents() {
     for (let i = 0; i < opponents.length; i++) {
         // Only render opponent if they're not you (as you will be in the players array) and obviously only if they're alive
-        if (opponents[i].id !== id && opponents[i].alive && opponents[i].room === room) {
+        if (opponents[i].id !== id && opponents[i].alive) {
             // Look for bullets to be harmed by
             for (let j = 0; j < opponents[i].bullets.length; j++) {
                 // Draw bullets
@@ -9,9 +9,9 @@ function renderOpponents() {
                 // X and Y coordinates are array elements 0 and 1 respectively
                 let bulletX = opponents[i].bullets[j][0] * width;
                 let bulletY = opponents[i].bullets[j][1] * height;
-                ellipse(bulletX, bulletY, width * 0.01);
+                ellipse(bulletX, bulletY, width * 0.007);
                 // bullet made into temporary object so that it can be checked with Collision function
-                let currentBullet = {x: bulletX, y: bulletY, w: width * 0.01, h: height * 0.01};
+                let currentBullet = {x: bulletX, y: bulletY, w: width * 0.007, h: height * 0.007};
                 // If enemy's bullet hits you
                 if (collides(currentBullet, player)) {
                     if (!player.invincible) {
@@ -40,7 +40,7 @@ function renderOpponents() {
                 }
                 // Body
                 fill(opponents[i].hue, 100, 100);
-                rect(opponents[i].x * width, opponents[i].y * height, player.w, player.h);
+                rect(opponents[i].x * width, opponents[i].y * height, player.w, player.h, width / 200);
                 // Eyes
                 fill(0);
                 const eyeSize = width * 0.012;

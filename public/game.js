@@ -82,7 +82,11 @@ function renderHP() {
 }
 
 function gameMessage(msg) {
-    socket.emit('game message', msg);
+    const msgObject = {
+        msg: msg,
+        roomId: room
+    };
+    socket.emit('game message', JSON.stringify(msgObject));
 }
 
 // Visual effects of colours under each player
@@ -109,6 +113,7 @@ function enterGame() {
     inGame = true;
     updatePlayerDetails();
     socket.emit('update rooms');
+    $("#messages").html("");
     $("#lobby").hide();
     player.findStartingPosition();
 }

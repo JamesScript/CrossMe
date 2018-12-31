@@ -18,8 +18,8 @@ class PowerUp {
 // Global variables for game, things that will be changed according to user activity
 let players = [];
 let rooms = [
-    {name: "The Room", password: "", playerCount: 0, numId: 261085, authorId: null, powerUp: new PowerUp()},
-    {name: "Private", password: "private", playerCount: 0, numId: 261086, authorId: null, powerUp: new PowerUp()}
+    {name: "The Room", password: "", seconds: Infinity, playerCount: 0, numId: 261085, authorId: null, powerUp: new PowerUp()},
+    {name: "Private", password: "private", seconds: Infinity, playerCount: 0, numId: 261086, authorId: null, powerUp: new PowerUp()}
 ];
 
 // // Power up variables
@@ -28,6 +28,26 @@ let lastPowerUpY = 0.5;
 let lastPowerUpType = "health";
 let powerUpGot = false;
 let powerUpFailSafe; // Respawns power up in case the client who's got the setTimeout disconnects
+
+// Set clock for expiring
+const roomLife = 10 * 60; // Ten minutes
+const roomClock = setInterval(function() {
+    for (let i = 2; i < rooms.length; i++) {
+        rooms[i].seconds--;
+        const closeToEnd = 5 * 60; // 5 Minutes
+        if (rooms[i].seconds <= closeToEnd && rooms[i].seconds % 60 === 0){
+            io.emit('game message', JSON.stringify({
+                msg: "This room will expire in " + (rooms[i].seconds / 60) + " minutes.",
+                roomId: rooms[i].numId
+            }));
+        }
+        if (rooms[i].seconds <= 0) {
+            rooms.splice(i, 1);
+            let output = {data: rooms};
+            io.emit('update rooms', JSON.stringify(output));
+        }
+    }
+}, 1000);
 
 // Use (JS, CSS) files in Public folder
 app.use(express.static('public'));
@@ -149,11 +169,11 @@ io.on('connection', function (socket) {
                 if (rooms[i].numId === players[j].room) {
                     count++;
                 }
-            }
+            }let output = {data: rooms};
+            io.emit('update rooms', JSON.stringify(output));
             rooms[i].playerCount = count;
         }
-        let output = {data: rooms};
-        io.emit('update rooms', JSON.stringify(output));
+
     });
 
     // User creates a room
@@ -172,6 +192,7 @@ io.on('connection', function (socket) {
             }
         }
         proposedRoom.numId = rndId;
+        proposedRoom.seconds = roomLife;
         rooms.push(proposedRoom);
         let output = {data: rooms};
         io.emit('update rooms', JSON.stringify(output));
