@@ -67,15 +67,17 @@ $(function () {
     });
 
     // Power up is spawn on client side because of walls and collision checking
-    socket.on('spawn power up', function(info) {
-        let potentialPowerUp = JSON.parse(info);
-        // X and Y values multiplied by width and height in constructor of PowerUp
-        powerUp = new PowerUp(potentialPowerUp.x, potentialPowerUp.y, potentialPowerUp.type);
+    socket.on('power up respawned', function(roomNum) {
+        if (roomNum === room) {
+            getPowerUp();
+        }
     });
 
     // Power up got
-    socket.on('power up got', function() {
-        powerUp.got = true;
+    socket.on('power up got', function(roomNum) {
+        if (roomNum === room) {
+            powerUp.got = true;
+        }
     });
 
     // Get details of existing power up from server when joining the game

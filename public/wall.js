@@ -16,14 +16,14 @@ class Wall {
         const lineWidth = width * 0.04;
         for (let i = 0; i < floor(this.h / lineHeight); i++) {
             stroke(hue, sat, 70);
-            line(this.x, this.y + i * lineHeight, this.x + this.w, this.y + i * lineHeight);
+            line(this.x, this.y + i * lineHeight, this.x + this.w - 1, this.y + i * lineHeight - 1);
             for (let j = 0; j < ceil(this.w / lineWidth); j++) {
                 let xPos = this.x + j * lineWidth;
                 if (i % 2 === 0) {
                     xPos += lineWidth / 2;
                 }
                 if (xPos < this.x + this.w - 1) {
-                    line(xPos, this.y + i * lineHeight, xPos, this.y + i * lineHeight + lineHeight);
+                    line(xPos, this.y + i * lineHeight, xPos, this.y + i * lineHeight + lineHeight - 1);
                 }
             }
             noStroke();

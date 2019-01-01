@@ -1,4 +1,5 @@
 class Player {
+    // If changing height and width, make sure it is changed for the opponents and more importantly in SERVER
     constructor(x, y) {
         this.x = x;
         this.y = y;

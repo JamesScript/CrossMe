@@ -34,7 +34,8 @@ class PowerUp {
     update() {
         if (collides(this, player) && !this.got) {
             this.got = true;
-            socket.emit('power up got');
+            socket.emit('power up got', room);
+            // Reformatting camel case to normal English
             let typeName = this.type;
             if (typeName === "funkyFungus") {
                 typeName = "funky fungus";
@@ -43,9 +44,6 @@ class PowerUp {
             }
             gameMessage(name + " found some " + typeName);
             this[this.type](); // Call the method that contains the effect
-            setTimeout(function() {
-                spawnPowerUp();
-            }, this.respawnTime);
         }
     }
 
@@ -90,20 +88,20 @@ class PowerUp {
     }
 }
 
-function spawnPowerUp() {
-    const powerUpTypes = ["health", "speed", "rapidFire", "shield", "slothadone", "funkyFungus"];
-    let potentialPowerUp = {x: random(width - player.w), y: random(height - player.h), w: player.h, h: player.h};
-    let collidingWalls = true;
-    while (collidingWalls) {
-        collidingWalls = false;
-        for (let i = 0; i < walls.length; i++) {
-            if (collides(potentialPowerUp, walls[i])) {
-                potentialPowerUp.x = random(width - player.w);
-                potentialPowerUp.y = random(height - player.h);
-                collidingWalls = true;
-            }
-        }
-    }
-    let powerUpPackage = {x: potentialPowerUp.x / width, y: potentialPowerUp.y / height, type: powerUpTypes[floor(random(powerUpTypes.length))]};
-    socket.emit('spawn power up', JSON.stringify(powerUpPackage));
-}
+// function spawnPowerUp() {
+//     const powerUpTypes = ["health", "speed", "rapidFire", "shield", "slothadone", "funkyFungus"];
+//     let potentialPowerUp = {x: random(width - player.w), y: random(height - player.h), w: player.h, h: player.h};
+//     let collidingWalls = true;
+//     while (collidingWalls) {
+//         collidingWalls = false;
+//         for (let i = 0; i < walls.length; i++) {
+//             if (collides(potentialPowerUp, walls[i])) {
+//                 potentialPowerUp.x = random(width - player.w);
+//                 potentialPowerUp.y = random(height - player.h);
+//                 collidingWalls = true;
+//             }
+//         }
+//     }
+//     let powerUpPackage = {x: potentialPowerUp.x / width, y: potentialPowerUp.y / height, type: powerUpTypes[floor(random(powerUpTypes.length))]};
+//     socket.emit('spawn power up', JSON.stringify(powerUpPackage));
+// }

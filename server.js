@@ -5,14 +5,62 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const shortid = require('shortid');
 
+const playerWidth = 0.03; // Proportional to width of client's canvas
+const respawnTime = 5000;
+
 // Defining how to generate a power up object
 class PowerUp {
-    constructor(x = 0.5, y = 0.5, type = "health", got = false) {
-        this.x = x;
-        this.y = y;
-        this.type = type;
-        this.got = got;
+    // Position and what type of power up we start with is determined at creation
+    constructor(levelDesignName) {
+        // Array of dimensions and coordinates (x, y, w, h) of each wall
+        const wallsDimensions = wallDesigns[levelDesignName];
+        const rndPos = function() {
+            return Math.random() * (1 - playerWidth);
+        };
+        let potentialPowerUp = {
+            x: rndPos(),
+            y: rndPos(),
+            w: playerWidth,
+            h: playerWidth
+        };
+        const tryNewPos = function() {
+            potentialPowerUp.x = rndPos();
+            potentialPowerUp.y = rndPos();
+        };
+        let collidingWithSomething = true;
+        // Big loop that will not be broken out of until power up doesn't collide with walls or players
+        while (collidingWithSomething) {
+            collidingWithSomething = false;
+            for (let i = 0; i < wallsDimensions.length; i++) {
+                if (collides(wallsDimensions[i], potentialPowerUp)) {
+                    collidingWithSomething = true;
+                    tryNewPos();
+                }
+            }
+            if (!collidingWithSomething) {
+                for (let i = 0; i < players.length; i++) {
+                    if (collides(players[i], potentialPowerUp)) {
+                        collidingWithSomething = true;
+                        tryNewPos();
+                    }
+                }
+            }
+        }
+        // End of loop - generate object
+        const keys = Object.keys(potentialPowerUp);
+        for (let i = 0; i < keys.length; i++) {
+            this[keys[i]] = potentialPowerUp[keys[i]];
+        }
+        // Choose type at random
+        const powerUpTypes = ["health", "speed", "rapidFire", "shield", "slothadone", "funkyFungus"];
+        this.type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+        this.got = false;
     }
+}
+
+// Collision detection, identical to one in game.js but needed for server side checking
+function collides(a, b) {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
 // Coordinates and dimensions of original level design / walls proportionate to width and height
@@ -78,24 +126,47 @@ const defaultLevel = [
         "h": 0.1
     }
 ];
+// Object that contains all the different wall designs, players will submit their level designs to this object
+const wallDesigns = {
+  default: defaultLevel
+};
 
 // Global variables for game, things that will be changed according to user activity
 let players = [];
 let rooms = [
-    {name: "The Room", password: "", seconds: Infinity, playerCount: 0, numId: 261085, authorId: null, powerUp: new PowerUp()},
-    {name: "Private", password: "private", seconds: Infinity, playerCount: 0, numId: 261086, authorId: null, powerUp: new PowerUp()}
+    {
+        name: "The Room",
+        password: "",
+        seconds: Infinity,
+        playerCount: 0,
+        numId: 261085,
+        authorId: null,
+        powerUp: new PowerUp("default"),
+        wallDesign: "default"
+    },
+    {
+        name: "Private",
+        password: "private",
+        seconds: Infinity,
+        playerCount: 0,
+        numId: 261086,
+        authorId: null,
+        powerUp: new PowerUp("default"),
+        wallDesign: "default"
+    }
 ];
 
 // // Power up variables
-let lastPowerUpX = 0.5;
-let lastPowerUpY = 0.5;
-let lastPowerUpType = "health";
-let powerUpGot = false;
-let powerUpFailSafe; // Respawns power up in case the client who's got the setTimeout disconnects
+// let lastPowerUpX = 0.5;
+// let lastPowerUpY = 0.5;
+// let lastPowerUpType = "health";
+// let powerUpGot = false;
+// let powerUpFailSafe; // Respawns power up in case the client who's got the setTimeout disconnects
 
 // Set clock for expiring
-const roomLife = 10 * 60; // Ten minutes
-const roomClock = setInterval(function() {
+const MINUTES = 60;
+const roomLife = 30 * MINUTES; // 30 minutes
+setInterval(function() {
     for (let i = 2; i < rooms.length; i++) {
         rooms[i].seconds--;
         const closeToEnd = 5 * 60; // 5 Minutes
@@ -124,6 +195,17 @@ app.get('/', function (req, res) {
 // Generates a random ID that will be used to identify the user, useful in case of duplicate names
 app.get('/getID', function (req, res) {
     res.send(shortid.generate());
+});
+
+// Get dimensions of walls so they can be rendered client-side
+app.get('/walls/:roomNum', function (req, res) {
+    let roomNum = Number(req.params.roomNum);
+    for (let i = 0; i < rooms.length; i++) {
+        if (roomNum === rooms[i].numId) {
+            let designName = rooms[i].wallDesign;
+            return res.json(wallDesigns[designName]);
+        }
+    }
 });
 
 // Check if public, send password back for prompting if not
@@ -220,7 +302,7 @@ app.get("/powerUpDetails/:roomNum", function(req, res) {
     let roomNum = Number(req.params.roomNum);
     for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].numId === roomNum) {
-            console.log(rooms[i].powerUp);
+            // console.log(rooms[i].powerUp);
             return res.json(rooms[i].powerUp);
         }
     }
@@ -269,11 +351,14 @@ io.on('connection', function (socket) {
         }
         proposedRoom.numId = rndId;
         proposedRoom.seconds = roomLife;
+        proposedRoom.wallDesign = "default";
         proposedRoom.playerCount = 0;
+        proposedRoom.powerUp = new PowerUp("default");
         rooms.push(proposedRoom);
         let output = {data: rooms};
         io.emit('update rooms', JSON.stringify(output));
     });
+
 
     // Messages
     socket.on('chat message', function (msg) {
@@ -308,7 +393,7 @@ io.on('connection', function (socket) {
             }
         }
         // If player is not in the array, add them to it
-        if (matches === 0 && coordsObject.id.length > 0) {
+        if (coordsObject.id !== null && matches === 0 && coordsObject.id.length > 0) {
             players.push(coordsObject);
         }
         // Send data to all clients
@@ -322,32 +407,35 @@ io.on('connection', function (socket) {
     });
 
     // Spawn a power up
-    socket.on('spawn power up', function (info) {
-        clearTimeout(powerUpFailSafe);
-        powerUpGot = false;
-        let parsedInfo = JSON.parse(info);
-        lastPowerUpX = parsedInfo.x;
-        lastPowerUpY = parsedInfo.y;
-        lastPowerUpType = parsedInfo.type;
-        io.emit('spawn power up', info);
-    });
+    // socket.on('spawn power up', function (info) {
+    //     clearTimeout(powerUpFailSafe);
+    //     powerUpGot = false;
+    //     let parsedInfo = JSON.parse(info);
+    //     lastPowerUpX = parsedInfo.x;
+    //     lastPowerUpY = parsedInfo.y;
+    //     lastPowerUpType = parsedInfo.type;
+    //     io.emit('spawn power up', info);
+    // });
 
     // Broadcast the fact that the power up has been collected, so that it is removed from all users' games
-    socket.on('power up got', function () {
-        // fail-safe included in case client who's generating new power up disconnects
-        powerUpFailSafe = setTimeout(function() {
-            const powerUpTypes = ["health", "speed", "rapidFire", "shield", "slothadone", "funkyFungus"];
-            let rnd = Math.floor(Math.random() * powerUpTypes.length);
-            powerUpGot = false;
-            const defaultPowerUp = {
-                x: 0.5,
-                y: 0.5,
-                type: powerUpTypes[rnd]
-            };
-            io.emit('spawn power up', JSON.stringify(defaultPowerUp));
-        }, 15 * 1000);
-        powerUpGot = true;
-        io.emit('power up got');
+    socket.on('power up got', function (roomNum) {
+        // Make sure that the object has 'got' set to true server side, in case new player joins game
+        for (let i = 0; i < rooms.length; i++) {
+            // Check if Number function is needed
+            if (rooms[i].numId === Number(roomNum)) {
+                rooms[i].powerUp.got = true;
+                // Set respawn timeout here
+                setTimeout(function() {
+                    if (rooms[i] !== undefined) {
+                        rooms[i].powerUp = new PowerUp(rooms[i].wallDesign);
+                        io.emit('power up respawned', roomNum); // initiates get request from each client for new Power Up
+                    }
+                }, respawnTime);
+                break;
+            }
+        }
+        // Broadcast to all players so that they cannot see or collect their power up
+        io.emit('power up got', roomNum);
     });
 
     // Get details of existing power up when user connects

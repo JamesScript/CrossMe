@@ -12,11 +12,18 @@ function setup() {
     cnv.parent("gameContainer");
     colorMode(HSB);
     noStroke();
-    cornersLevel();
     player = new Player(0, 0);
-    player.findStartingPosition();
-    // socket.emit('get power up details');
     socket.emit('update rooms');
+    // jumpIn();
+}
+
+// TESTING PURPOSES!
+function jumpIn() {
+    name = "James";
+    room = 261085;
+    $("#enterName").hide();
+    $("#lobby").hide();
+    enterGame();
 }
 
 function draw() {
@@ -136,7 +143,14 @@ function enterGame() {
     socket.emit('update rooms');
     $("#messages").html("");
     $("#lobby").hide();
+    // Build walls before finding starting position and getting power up - as these will need to be based on the walls
+    walls = [];
+    buildWalls(); // Request coordinates and dimensions from server
     player.findStartingPosition();
+    getPowerUp();
+}
+
+function getPowerUp() {
     $.get("/powerUpDetails/"+room, function(data) {
         powerUp = new PowerUp(data.x, data.y, data.type, data.got);
     });
@@ -181,4 +195,13 @@ function updateLeaderBoard() {
     for (let i = 0; i < toSort.length; i++) {
         killList.append($("<li>").text(toSort[i].name + " : " + toSort[i].kills));
     }
+}
+
+// Get request dimensions and coordinates of walls from server
+function buildWalls() {
+    $.get("/walls/"+room, function(data) {
+        for (let i = 0; i < data.length; i++) {
+            walls.push(new Wall(data[i].x * width, data[i].y * height, data[i].w * width, data[i].h *  height));
+        }
+    });
 }
