@@ -166,8 +166,12 @@ let rooms = [
 // Set clock for expiring
 const MINUTES = 60;
 const roomLife = 30 * MINUTES; // 30 minutes
+// TRYING OUT ROOMLEN TO SEE IF THIS FIXES BROWSER CRASH BUG
+const roomLen = function() {
+  return rooms.length;
+}
 setInterval(function() {
-    for (let i = 2; i < rooms.length; i++) {
+    for (let i = 2; i < roomLen(); i++) {
         rooms[i].seconds--;
         const closeToEnd = 5 * 60; // 5 Minutes
         if (rooms[i].seconds <= closeToEnd && rooms[i].seconds % 60 === 0){
