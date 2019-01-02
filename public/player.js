@@ -169,13 +169,15 @@ class Player {
         this.findStartingPosition();
     }
 
-    findStartingPosition() {
+    findStartingPosition(count) {
         // Recursive function, keeps running until user is not colliding with any walls
+        count = count || 0;
+        console.log(count);
         this.x = random(width - this.w);
         this.y = random(height - this.h);
         for (let i = 0; i < walls.length; i++) {
             if (collides(walls[i], this)) {
-                this.findStartingPosition();
+                this.findStartingPosition(count+1);
                 break;
             }
         }
