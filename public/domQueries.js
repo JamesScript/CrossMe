@@ -12,14 +12,15 @@ function domQueries() {
     });
 
     // Sending a message in the chat window
-    $('#chatForm').submit(function () {
+    $('#chatForm').submit(function (e) {
         const m = $('#m');
         const msgObject = {
             msg: name + ": " + m.val(),
-            roomId: roomNum
+            roomId: room
         };
         socket.emit('chat message', JSON.stringify(msgObject));
         m.val('');
+        e.preventDefault();
         return false;
     });
 

@@ -77,12 +77,5 @@ class Wall {
                 console.log("both");
             }
         }
-        // Collision detection
-        // while (collides(this, player)) {
-        //     player.prevX.shift();
-        //     player.prevY.shift();
-        //     player.x = player.prevX[0];
-        //     player.y = player.prevY[0];
-        // }
     }
 }
