@@ -36,8 +36,15 @@ class Wall {
             // Determine whether player was previously on the left or right of the center of the wall
             if (player.prevX[0] + player.w / 2 < self.x + self.w / 2) {
                 player.x = self.x - player.w;
+                // Failsafe that prevents infinite loop on some devices
+                while (collides(self, player)) {
+                      player.x--;
+                }
             } else {
                 player.x = self.x + self.w;
+                while (collides(self, player)) {
+                      player.x++;
+                }
             }
             self.resetForLoop = true;
         };
@@ -45,8 +52,14 @@ class Wall {
             // Determine whether player was previously on the above or bottom of the center of the wall
             if (player.prevY[0] + player.h / 2 < self.y + self.h / 2) {
                 player.y = self.y - player.h;
+                while (collides(self, player)) {
+                      player.y--;
+                }
             } else {
                 player.y = self.y + self.h;
+                while (collides(self, player)) {
+                      player.y++;
+                }
             }
             self.resetForLoop = true;
         };
@@ -54,14 +67,14 @@ class Wall {
         if (collides(this, player)) {
             if (player.y > this.y && player.y + player.h < this.y + this.h) {
                 pushHorizontal();
-                // console.log("horizontal");
+                console.log("horizontal");
             } else if (player.x > this.x && player.x + player.w < this.x + this.w) {
                 pushVertical();
-                // console.log("vertical");
+                console.log("vertical");
             } else {
                 pushHorizontal();
                 pushVertical();
-                // console.log("both");
+                console.log("both");
             }
         }
         // Collision detection

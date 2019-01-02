@@ -146,7 +146,7 @@ function enterGame() {
     // Build walls before finding starting position and getting power up - as these will need to be based on the walls
     walls = [];
     buildWalls(); // Request coordinates and dimensions from server
-    player.findStartingPosition();
+    // player.findStartingPosition(); PUT INSIDE BUILD WALLS
     getPowerUp();
 }
 
@@ -203,5 +203,6 @@ function buildWalls() {
         for (let i = 0; i < data.length; i++) {
             walls.push(new Wall(data[i].x * width, data[i].y * height, data[i].w * width, data[i].h *  height));
         }
+        player.findStartingPosition();
     });
 }
