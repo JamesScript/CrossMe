@@ -35,7 +35,7 @@ $(function () {
     // When message is sent by anyone, append it to the chat window
     socket.on('chat message', function (msg) {
         const msgObject = JSON.parse(msg);
-        if (msgObject.roomId === roomNum) {
+        if (msgObject.roomId === room) {
             $('#messages').append($('<li>').text(msgObject.msg));
             const container = $('#msgContainer');
             container.scrollTop(container[0].scrollHeight);

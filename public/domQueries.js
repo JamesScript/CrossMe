@@ -16,7 +16,7 @@ function domQueries() {
         const m = $('#m');
         const msgObject = {
             msg: name + ": " + m.val(),
-            roomId: roomNum
+            roomId: room
         };
         socket.emit('chat message', JSON.stringify(msgObject));
         m.val('');
