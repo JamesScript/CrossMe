@@ -10,6 +10,7 @@ function setup() {
     const smallerDim = gameContainer.clientWidth < gameContainer.clientHeight ? gameContainer.clientWidth : gameContainer.clientHeight;
     const cnv = createCanvas(smallerDim, smallerDim);
     cnv.parent("gameContainer");
+    frameRate(30);
     colorMode(HSB);
     noStroke();
     player = new Player(0, 0);
