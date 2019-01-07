@@ -177,7 +177,9 @@ function updatePlayerDetails() {
     for (let i = 0; i < player.bullets.length; i++) {
         infoPackage.bullets.push([player.bullets[i].x / width, player.bullets[i].y / height]);
     }
-    socket.emit('player coordinates', JSON.stringify(infoPackage));
+    $.get('/update/' + JSON.stringify(infoPackage), function(data) {
+        console.log(data);
+    });
 }
 
 function updateLeaderBoard() {

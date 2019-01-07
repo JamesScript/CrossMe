@@ -14,7 +14,7 @@ class Bullet {
     }
 
     update() {
-        const speed = width * 0.03;
+        const speed = width * 0.02;
         let xVels = [0, speed, 0, -speed];
         let yVels = [-speed, 0, speed, 0];
         this.x += xVels[this.dir];

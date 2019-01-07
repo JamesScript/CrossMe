@@ -312,6 +312,41 @@ app.get("/powerUpDetails/:roomNum", function(req, res) {
     }
 });
 
+app.get('/update/:info', function(req, res) {
+    const info = JSON.parse(req.params.info);
+    let successful = false;
+    let matches = 0;
+    // If player already is in the array, update their details
+    for (let i = 0; i < players.length; i++) {
+        if (players[i].id === info.id) {
+            // Each property that is required to broadcast for each player in contained in the array below 'props'
+            const props = "x y name id room bullets dir invincible kills shielded alive".split(" ");
+            for (let j = 0; j < props.length; j++) {
+                players[i][props[j]] = info[props[j]];
+            }
+            matches++;
+            successful = true;
+            // TRY ADDING BREAK HERE
+        }
+    }
+    // If player is not in the array, add them to it
+    if (info.id !== null && matches === 0 && info.id.length > 0) {
+        players.push(info);
+        successful = true;
+    }
+    res.send(successful);
+    // // Send data to all clients
+    // let outData = {data: players};
+    // io.emit('player coordinates', JSON.stringify(outData));
+});
+
+const pulse = () => {
+    io.emit('player coordinates', JSON.stringify({data: players}));
+};
+
+const FRAMERATE = 30;
+setInterval(pulse, Math.floor(1000 / FRAMERATE));
+
 // Manage socket connections
 io.on('connection', function (socket) {
     console.log('a user connected');
