@@ -10,7 +10,7 @@ function setup() {
     const smallerDim = gameContainer.clientWidth < gameContainer.clientHeight ? gameContainer.clientWidth : gameContainer.clientHeight;
     const cnv = createCanvas(smallerDim, smallerDim);
     cnv.parent("gameContainer");
-    frameRate(30);
+    frameRate(5);
     colorMode(HSB);
     noStroke();
     player = new Player(0, 0);
@@ -178,7 +178,7 @@ function updatePlayerDetails() {
         infoPackage.bullets.push([player.bullets[i].x / width, player.bullets[i].y / height]);
     }
     $.get('/update/' + JSON.stringify(infoPackage), function(data) {
-        console.log(data);
+        // console.log(data);
     });
 }
 
