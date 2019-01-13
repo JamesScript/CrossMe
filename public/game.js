@@ -10,22 +10,13 @@ function setup() {
     const smallerDim = gameContainer.clientWidth < gameContainer.clientHeight ? gameContainer.clientWidth : gameContainer.clientHeight;
     const cnv = createCanvas(smallerDim, smallerDim);
     cnv.parent("gameContainer");
-    frameRate(5);
+    frameRate(20);
     colorMode(HSB);
     noStroke();
     player = new Player(0, 0);
     socket.emit('update rooms');
-    // jumpIn();
 }
 
-// TESTING PURPOSES!
-function jumpIn() {
-    name = "James";
-    room = 261085;
-    $("#enterName").hide();
-    $("#lobby").hide();
-    enterGame();
-}
 
 function draw() {
     // Do not draw anything to the canvas unless the user is not inside a room and active
